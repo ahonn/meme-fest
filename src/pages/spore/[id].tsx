@@ -18,7 +18,6 @@ import {
   Box,
 } from '@mantine/core';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
@@ -107,16 +106,6 @@ export default function SporePage(props: SporePageProps) {
         </Card>
         <Flex direction="column" justify="space-between" mt="sm">
           <Box>
-            <Link
-              href={`/cluster/${spore.clusterId}`}
-              style={{ textDecoration: 'none' }}
-              prefetch
-              passHref
-            >
-              <Title order={5} color="blue">
-                {cluster?.name}
-              </Title>
-            </Link>
             <Title>{`${id!.slice(0, 10)}...${id!.slice(-10)}`}</Title>
             <Text size="sm" color="gray">
               Owned by {`${owner.slice(0, 10)}...${owner.slice(-10)}`}
