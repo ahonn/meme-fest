@@ -3,20 +3,19 @@ import { helpers } from '@ckb-lumos/lumos';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDisclosure, useId } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
-import { Button, Group, Text, Image, Select } from '@mantine/core';
+import { Button, Group, Text, Image } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { IconPhoto, IconUpload } from '@tabler/icons-react';
-import useWalletConnect from '../useWalletConnect';
 import useClustersQuery from '../query/useClustersQuery';
+import useWalletConnect from '../useWalletConnect';
 import { getScript } from '@/utils/script';
 import useAddSporeMutation from '../mutation/useAddSporeMutation';
 
-export default function useAddSporeModal(id?: string) {
+export default function useAddSporeModal(clusterId?: string) {
   const [opened, { open, close }] = useDisclosure(false);
   const { address, lock } = useWalletConnect();
   const [content, setContent] = useState<Blob | null>(null);
-  const [clusterId, setClusterId] = useState<string | undefined>(id);
   const [dataUrl, setDataUrl] = useState<string | ArrayBuffer | null>(null);
   const modalId = useId();
 
@@ -89,7 +88,6 @@ export default function useAddSporeModal(id?: string) {
         modalId,
         title: 'Add New spore',
         onClose: () => {
-          setClusterId(id);
           setContent(null);
           setDataUrl(null);
           close();
@@ -99,19 +97,6 @@ export default function useAddSporeModal(id?: string) {
         closeOnClickOutside: !addSporeMutation.isLoading,
         children: (
           <>
-            <Select
-              mb="md"
-              dropdownPosition="bottom"
-              maxDropdownHeight={400}
-              placeholder="Choose Cluster"
-              data={selectableQuerys.map(({ id, name }) => ({
-                value: id,
-                label: name,
-              }))}
-              value={clusterId}
-              onChange={(id) => setClusterId(id || undefined)}
-            />
-
             {dataUrl ? (
               <Image src={dataUrl.toString()} alt="preview" />
             ) : (
@@ -168,8 +153,6 @@ export default function useAddSporeModal(id?: string) {
     dataUrl,
     opened,
     close,
-    clusterId,
-    id,
   ]);
 
   return {
