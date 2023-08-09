@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { useMemo } from 'react';
 import { IconAlertCircle } from '@tabler/icons-react';
-import { GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import { config, helpers } from '@ckb-lumos/lumos';
 import SporeCard from '@/components/SporeCard';
 import useWalletConnect from '@/hooks/useWalletConnect';
@@ -26,9 +26,9 @@ export type HomePageProps = {
   spores: Spore[];
 };
 
-const id = process.env.CLUSTER_ID!;
+const id = process.env.NEXT_PUBLIC_CLUSTER_ID!;
 
-export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
+export const getServerSideProps: GetServerSideProps<HomePageProps> = async () => {
   const cluster = await getCluster(id);
   const spores = await getSpores(id);
   return {

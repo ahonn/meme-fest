@@ -1,5 +1,4 @@
 import { predefinedSporeConfigs } from '@spore-sdk/core';
-import { helpers } from '@ckb-lumos/lumos';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDisclosure, useId } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
@@ -9,7 +8,6 @@ import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { IconPhoto, IconUpload } from '@tabler/icons-react';
 import useClustersQuery from '../query/useClustersQuery';
 import useWalletConnect from '../useWalletConnect';
-import { getScript } from '@/utils/script';
 import useAddSporeMutation from '../mutation/useAddSporeMutation';
 
 export default function useAddSporeModal(clusterId?: string) {
@@ -20,22 +18,9 @@ export default function useAddSporeModal(clusterId?: string) {
   const modalId = useId();
 
   const clustersQuery = useClustersQuery();
-  const selectableQuerys = useMemo(() => {
-    if (!clustersQuery.data) {
-      return [];
-    }
-    return clustersQuery.data.filter(({ cell }) => {
-      const anyoneCanPayScript = getScript('ANYONE_CAN_PAY');
-      return (
-        cell.cellOutput.lock.codeHash === anyoneCanPayScript.CODE_HASH ||
-        helpers.encodeToAddress(cell.cellOutput.lock) === address
-      );
-    });
-  }, [clustersQuery, address]);
-
   const cluster = useMemo(
-    () => selectableQuerys.find(({ id }) => id === clusterId),
-    [selectableQuerys, clusterId],
+    () => clustersQuery.data?.find(({ id }) => id === clusterId),
+    [clustersQuery, clusterId],
   );
   const addSporeMutation = useAddSporeMutation(cluster);
   const loading = addSporeMutation.isLoading && !addSporeMutation.isError;
@@ -146,7 +131,6 @@ export default function useAddSporeModal(clusterId?: string) {
   }, [
     modalId,
     addSporeMutation.isLoading,
-    selectableQuerys,
     content,
     handleDrop,
     handleSubmit,

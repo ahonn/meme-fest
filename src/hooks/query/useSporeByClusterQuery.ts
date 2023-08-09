@@ -14,7 +14,7 @@ export default function useSporeByClusterQuery(
       const data = await response.json();
       return data as Spore[];
     },
-    { initialData, enabled: !!clusterId },
+    { initialData, enabled: !!clusterId, refetchOnWindowFocus: true },
   );
   return sporesQuery;
 }
