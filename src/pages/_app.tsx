@@ -20,7 +20,19 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider withNormalizeCSS theme={baseTheme}>
-        <ModalsProvider>
+        <ModalsProvider
+          modalProps={{
+            centered: true,
+            sx: {
+              '.mantine-Modal-inner': {
+                padding: 0,
+              },
+              '.mantine-Modal-content': {
+                overflowY: 'visible',
+              },
+            },
+          }}
+        >
           <Hydrate state={pageProps.dehydratedState}>
             <WagmiConfig config={config}>
               <Notifications />

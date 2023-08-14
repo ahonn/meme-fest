@@ -1,5 +1,6 @@
 import { Title, createStyles } from '@mantine/core';
 import Link from 'next/link';
+import { getStrokeShadow } from './ShadowTitle';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -9,16 +10,7 @@ const useStyles = createStyles((theme) => ({
   logo: {
     color: '#F7EEDB',
     textTransform: 'uppercase',
-    textShadow: `
-      3px 0 0 ${theme.black},
-      -3px 0 0 ${theme.black},
-      0 3px 0 ${theme.black},
-      0 -3px 0 ${theme.black},
-      3px 3px 0 ${theme.black},
-      3px -3px 0 ${theme.black},
-      -3px -3px 0 ${theme.black},
-      -3px 3px 0 ${theme.black}
-    `,
+    textShadow: getStrokeShadow(3, theme.black),
     fontFeatureSettings: "'calt' off",
     fontSize: '24px',
     lineHeight: '32px',

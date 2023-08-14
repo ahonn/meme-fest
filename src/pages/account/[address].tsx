@@ -1,14 +1,14 @@
 import Layout from '@/components/Layout';
-import { SimpleGrid, Box, Title, Tabs, Tooltip } from '@mantine/core';
+import { Box, Text, createStyles, Flex, SimpleGrid } from '@mantine/core';
 import { useMemo } from 'react';
 import SporeCard from '@/components/SporeCard';
 import { Cell, helpers } from '@ckb-lumos/lumos';
-import { useClipboard } from '@mantine/hooks';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import useSporesQuery from '@/hooks/query/useSporesQuery';
 import { Cluster, getClusters } from '@/utils/cluster';
 import { Spore, getSpores } from '@/utils/spore';
+import ShadowTitle from '@/components/ShadowTitle';
 
 export type AccountPageProps = {
   clusters: Cluster[];
@@ -63,10 +63,20 @@ export const getStaticProps: GetStaticProps<
   };
 };
 
+const useStyles = createStyles((theme) => ({
+  count: {
+    fontSize: '32px',
+    fontWeight: 'bold',
+    lineHeight: 1.4,
+    fontFamily: theme.headings.fontFamily,
+    color: '#7E7E7E',
+  },
+}));
+
 export default function AccountPage(props: AccountPageProps) {
+  const { classes } = useStyles();
   const router = useRouter();
   const { address } = router.query;
-  const clipboard = useClipboard({ timeout: 500 });
   const sporesQuery = useSporesQuery(props.spores);
 
   const spores = useMemo(() => {
@@ -85,38 +95,21 @@ export default function AccountPage(props: AccountPageProps) {
 
   return (
     <Layout>
-      <Box mt="md">
-        <Box sx={{ cursor: 'pointer' }} onClick={() => clipboard.copy(address)}>
-          <Tooltip
-            label={clipboard.copied ? 'Copied!' : 'Copy'}
-            position="bottom"
-            withArrow
-          >
-            <Title sx={{ display: 'inline' }}>{displayAddress}</Title>
-          </Tooltip>
+      <Flex direction="column" justify="center" align="center">
+        <ShadowTitle>{displayAddress}</ShadowTitle>
+      </Flex>
+      {spores.length > 0 && (
+        <Box mt="50px">
+          <Text className={classes.count}>
+            {spores.length} item{spores.length > 1 && 's'}
+          </Text>
+          <SimpleGrid cols={4} spacing="xl" mt="24px">
+            {spores.map((spore) => (
+              <SporeCard key={spore.id} spore={spore} />
+            ))}
+          </SimpleGrid>
         </Box>
-        <Tabs defaultValue="spores" mt="lg">
-          <Tabs.List>
-            <Tabs.Tab value="spores">Spores</Tabs.Tab>
-          </Tabs.List>
-
-          <Tabs.Panel value="spores">
-            <Box mt="md">
-              <Title order={4} color="gray.7">
-                {spores.length} Items
-              </Title>
-              <SimpleGrid cols={4} mt="sm">
-                {spores.map((spore: Spore) => (
-                  <SporeCard
-                    key={spore.id}
-                    spore={spore}
-                  />
-                ))}
-              </SimpleGrid>
-            </Box>
-          </Tabs.Panel>
-        </Tabs>
-      </Box>
+      )}
     </Layout>
   );
 }

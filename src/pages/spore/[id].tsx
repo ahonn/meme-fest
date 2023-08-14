@@ -1,9 +1,10 @@
 import Layout from '@/components/Layout';
+import ShadowTitle from '@/components/ShadowTitle';
 import useSporeByIdQuery from '@/hooks/query/useSporeByIdQuery';
 import { Cluster, getCluster } from '@/utils/cluster';
 import { Spore, getSpore, getSpores } from '@/utils/spore';
-import { BI, helpers } from '@ckb-lumos/lumos';
-import { Flex, Text, Title, createStyles, Image, Box } from '@mantine/core';
+import { BI, config, helpers } from '@ckb-lumos/lumos';
+import { Flex, Text, createStyles, Image } from '@mantine/core';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 
@@ -51,25 +52,7 @@ export const getStaticProps: GetStaticProps<
   };
 };
 
-const useStyles = createStyles((theme) => ({
-  title: {
-    color: theme.white,
-    textShadow: `
-      3px 0 0 ${theme.black},
-      -3px 0 0 ${theme.black},
-      0 3px 0 ${theme.black},
-      0 -3px 0 ${theme.black},
-      3px 3px 0 ${theme.black},
-      3px -3px 0 ${theme.black},
-      -3px 3px 0 ${theme.black},
-      -3px -3px 0 ${theme.black}
-    `,
-    mixBlendMode: 'darken',
-    fontSize: '32px',
-    overflow: 'visible',
-    lineHeight: '120%',
-    marginBottom: '25px',
-  },
+const useStyles = createStyles(() => ({
   image: {
     maxWidth: '660px',
   },
@@ -100,15 +83,15 @@ export default function SporePage(props: SporePageProps) {
     return null;
   }
 
-  const owner = helpers.encodeToAddress(spore.cell.cellOutput.lock);
+  const owner = helpers.encodeToAddress(spore.cell.cellOutput.lock, {
+    config: config.predefined.AGGRON4,
+  });
   const capacity = BI.from(spore.cell.cellOutput.capacity).toNumber() / 10 ** 8;
 
   return (
     <Layout>
       <Flex direction="column" justify="center" align="center">
-        <Title order={1} className={classes.title}>
-          Spore Details
-        </Title>
+        <ShadowTitle>Spore Details</ShadowTitle>
         <Image
           src={`/api/media/${spore.id}`}
           alt={spore.id}
@@ -123,7 +106,10 @@ export default function SporePage(props: SporePageProps) {
           </Flex>
           <Flex mb="16px">
             <Text className={classes.owner}>Owned By:</Text>
-            <Text className={classes.owner}>
+            <Text
+              className={classes.owner}
+              onClick={() => router.push(`/account/${owner}`)}
+            >
               {owner.slice(0, 10)}...{owner.slice(-10)}
             </Text>
           </Flex>

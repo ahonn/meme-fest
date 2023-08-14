@@ -1,12 +1,5 @@
 import Layout from '@/components/Layout';
-import {
-  Title,
-  Text,
-  Flex,
-  Box,
-  SimpleGrid,
-  createStyles,
-} from '@mantine/core';
+import { Text, Flex, Box, SimpleGrid } from '@mantine/core';
 import { useMemo } from 'react';
 import Image from 'next/image';
 import { config, helpers } from '@ckb-lumos/lumos';
@@ -17,6 +10,7 @@ import useClusterByIdQuery from '@/hooks/query/useClusterByIdQuery';
 import useSporeByClusterQuery from '@/hooks/query/useSporeByClusterQuery';
 import { Cluster, getCluster } from '@/utils/cluster';
 import { Spore, getSpores } from '@/utils/spore';
+import ShadowTitle from '@/components/ShadowTitle';
 
 export type HomePageProps = {
   cluster: Cluster | undefined;
@@ -33,29 +27,7 @@ export const getInitialProps = async () => {
   };
 };
 
-const useStyles = createStyles((theme) => ({
-  title: {
-    color: theme.white,
-    textShadow: `
-      3px 0 0 ${theme.black},
-      -3px 0 0 ${theme.black},
-      0 3px 0 ${theme.black},
-      0 -3px 0 ${theme.black},
-      3px 3px 0 ${theme.black},
-      3px -3px 0 ${theme.black},
-      -3px 3px 0 ${theme.black},
-      -3px -3px 0 ${theme.black}
-    `,
-    mixBlendMode: 'darken',
-    fontSize: '32px',
-    overflow: 'visible',
-    lineHeight: '120%',
-    marginBottom: '16px',
-  },
-}));
-
 export default function HomePage(props: HomePageProps) {
-  const { classes } = useStyles();
   const { address, connected } = useWalletConnect();
   const addSporeModal = useAddSporeModal(id as string);
 
@@ -92,9 +64,7 @@ export default function HomePage(props: HomePageProps) {
     <Layout>
       <Flex direction="column">
         <Flex direction="column" justify="center" align="center">
-          <Title order={1} className={classes.title}>
-            {cluster.name}
-          </Title>
+          <ShadowTitle>{cluster.name}</ShadowTitle>
           {!connected && (
             <Text color="brand.2">Connect your wallet to start minting!!</Text>
           )}

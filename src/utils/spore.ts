@@ -27,6 +27,11 @@ export function getSporeFromCell(cell: Cell): Spore {
   };
 }
 
+export type QueryOptions = {
+  includeContent?: boolean;
+  network?: Network;
+}
+
 export async function getSpores(clusterId?: string, network: Network = 'Aggron4') {
   const config = predefinedSporeConfigs[network];
   const indexer = new Indexer(config.ckbIndexerUrl);

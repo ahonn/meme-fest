@@ -1,5 +1,6 @@
 import { MantineThemeOverride } from '@mantine/core';
 import { Roboto, Courier_Prime } from 'next/font/google';
+import { getStrokeShadow } from './components/ShadowTitle';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -40,7 +41,10 @@ const components: MantineThemeOverride['components'] = {
         height: '48px',
         borderRadius: '0',
         padding: '0 24px',
-        boxShadow: `4px 4px 0 ${theme.black}`,
+        boxShadow: Array(4)
+          .fill(0)
+          .map((_, index) => `${index + 1}px ${index + 1}px 0 ${theme.black}`)
+          .join(','),
         backgroundColor: theme.colors.brand[0],
 
         '&:hover': {
@@ -54,16 +58,7 @@ const components: MantineThemeOverride['components'] = {
           lineHeight: '20px',
           fontWeight: 'bold',
           overflow: 'visible',
-          textShadow: `
-            2px 0 0 ${theme.black},
-            -2px 0 0 ${theme.black},
-            0 2px 0 ${theme.black},
-            0 -2px 0 ${theme.black},
-            2px 2px 0 ${theme.black},
-            2px -2px 0 ${theme.black},
-            -2px -2px 0 ${theme.black},
-            -2px 2px 0 ${theme.black}
-          `,
+          textShadow: getStrokeShadow(2, theme.black),
         },
       },
     }),
