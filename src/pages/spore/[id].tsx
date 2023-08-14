@@ -24,7 +24,7 @@ export const getStaticPaths: GetStaticPaths<SporePageParams> = async () => {
     };
   }
 
-  const spores = await getSpores();
+  const spores = await getSpores(process.env.NEXT_PUBLIC_CLUSTER_ID!);
   const paths = spores.map(({ id }) => ({
     params: { id },
   }));

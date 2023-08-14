@@ -6,21 +6,17 @@ import {
   Box,
   SimpleGrid,
   createStyles,
-  MediaQuery,
 } from '@mantine/core';
 import { useMemo } from 'react';
 import Image from 'next/image';
-import { GetServerSideProps } from 'next';
 import { config, helpers } from '@ckb-lumos/lumos';
 import SporeCard from '@/components/SporeCard';
 import useWalletConnect from '@/hooks/useWalletConnect';
-import Link from 'next/link';
 import useAddSporeModal from '@/hooks/modal/useAddSporeModal';
 import useClusterByIdQuery from '@/hooks/query/useClusterByIdQuery';
 import useSporeByClusterQuery from '@/hooks/query/useSporeByClusterQuery';
 import { Cluster, getCluster } from '@/utils/cluster';
 import { Spore, getSpores } from '@/utils/spore';
-import { useMediaQuery } from '@mantine/hooks';
 
 export type HomePageProps = {
   cluster: Cluster | undefined;
@@ -29,9 +25,7 @@ export type HomePageProps = {
 
 const id = process.env.NEXT_PUBLIC_CLUSTER_ID!;
 
-export const getServerSideProps: GetServerSideProps<
-  HomePageProps
-> = async () => {
+export const getInitialProps = async () => {
   const cluster = await getCluster(id);
   const spores = await getSpores(id);
   return {

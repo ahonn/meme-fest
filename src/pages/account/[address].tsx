@@ -28,8 +28,8 @@ export const getStaticPaths: GetStaticPaths<AccountPageParams> = async () => {
   }
 
   const addresses = new Set<string>();
-  const [clusters, spores] = await Promise.all([getClusters(), getSpores()]);
-  const cells = [...clusters, ...spores].map(({ cell }) => cell);
+  const spores = await getSpores(process.env.NEXT_PUBLIC_CLUSTER_ID!);
+  const cells = spores.map(({ cell }) => cell);
   cells.forEach((cell) => {
     addresses.add(helpers.encodeToAddress(cell.cellOutput.lock));
   });
