@@ -45,6 +45,7 @@ export default function useAddSporeModal(clusterId?: string) {
   const addSporeMutation = useAddSporeMutation(cluster, {
     onSigned: () => setTxStatus('pending'),
     onSuccess: () => setTxStatus('success'),
+    onRefreshed: () => close(),
   });
   const loading = addSporeMutation.isLoading && !addSporeMutation.isError;
 
@@ -81,9 +82,6 @@ export default function useAddSporeModal(clusterId?: string) {
         title: 'Congratulations!',
         message: 'Your spore has been successfully minted.',
       });
-      setTimeout(() => {
-        close();
-      }, 1000)
     } catch (e) {
       notifications.show({
         color: 'red',
@@ -91,7 +89,7 @@ export default function useAddSporeModal(clusterId?: string) {
         message: (e as Error).message,
       });
     }
-  }, [content, address, lock, addSporeMutation, close, clusterId]);
+  }, [content, address, lock, addSporeMutation, clusterId]);
 
   const sizeLimit = parseInt(
     process.env.NEXT_PUBLIC_MINT_SIZE_LIMIT ?? '300',

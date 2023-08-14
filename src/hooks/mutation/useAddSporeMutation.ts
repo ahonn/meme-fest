@@ -10,6 +10,7 @@ import { Transaction } from '@ckb-lumos/lumos';
 export interface MutationHooks {
   onSigned?: (txSkeleton: Transaction) => void;
   onSuccess?: (hash: string) => void;
+  onRefreshed?: () => void;
   onError?: (e: Error) => void;
 }
 
@@ -43,7 +44,9 @@ export default function useAddSporeMutation(
 
   const addSporeMutation = useMutation(addSpore, {
     onSuccess: () => {
-      queryClient.invalidateQueries('spores');
+      queryClient.invalidateQueries('spores').then(() => {
+        hooks?.onRefreshed?.();
+      });
       queryClient.invalidateQueries(['account', address]);
     },
     onError: (e) => {

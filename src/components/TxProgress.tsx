@@ -1,4 +1,5 @@
 import { Text, Box, Flex, Progress, createStyles } from '@mantine/core';
+import { randomInt } from 'crypto';
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -39,7 +40,7 @@ export default function TxProgress(props: TxProgressProps) {
 
   useEffect(() => {
     timerRef.current = window.setInterval(() => {
-      setProgress((prev) => Math.min(prev + 5, 99));
+      setProgress((prev) => Math.min(prev + Math.ceil(Math.random() * 3), 99));
     }, 1000);
 
     return () => {

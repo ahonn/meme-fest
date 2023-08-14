@@ -1,5 +1,5 @@
 import Layout from '@/components/Layout';
-import { Text, Flex, Box, SimpleGrid } from '@mantine/core';
+import { Text, Flex, Box, SimpleGrid, Button } from '@mantine/core';
 import { useMemo } from 'react';
 import Image from 'next/image';
 import { config, helpers } from '@ckb-lumos/lumos';
@@ -28,7 +28,7 @@ export const getInitialProps = async () => {
 };
 
 export default function HomePage(props: HomePageProps) {
-  const { address, connected } = useWalletConnect();
+  const { connected } = useWalletConnect();
   const addSporeModal = useAddSporeModal(id as string);
 
   const { data: cluster } = useClusterByIdQuery(id as string, props.cluster);
@@ -36,25 +36,6 @@ export default function HomePage(props: HomePageProps) {
     id as string,
     props.spores,
   );
-
-  const ownerAddress = useMemo(() => {
-    if (cluster) {
-      return helpers.encodeToAddress(cluster.cell.cellOutput.lock);
-    }
-    return '';
-  }, [cluster]);
-
-  const publicCluster = useMemo(() => {
-    if (cluster) {
-      return (
-        cluster.cell.cellOutput.lock.codeHash ===
-        config.predefined.AGGRON4.SCRIPTS['ANYONE_CAN_PAY'].CODE_HASH
-      );
-    }
-    return false;
-  }, [cluster]);
-
-  const canCreate = ownerAddress === address || publicCluster;
 
   if (!cluster) {
     return null;
@@ -65,7 +46,11 @@ export default function HomePage(props: HomePageProps) {
       <Flex direction="column">
         <Flex direction="column" justify="center" align="center">
           <ShadowTitle>{cluster.name}</ShadowTitle>
-          {!connected && (
+          {connected ? (
+            <Button onClick={addSporeModal.open}>
+              Mint
+            </Button>
+          ) : (
             <Text color="brand.2">Connect your wallet to start minting!!</Text>
           )}
         </Flex>
