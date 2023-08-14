@@ -1,25 +1,11 @@
 import Layout from '@/components/Layout';
-import useDestroySporeModal from '@/hooks/modal/useDestroySporeModal';
-import useTransferSporeModal from '@/hooks/modal/useTransferSporeModal';
-import useClusterByIdQuery from '@/hooks/query/useClusterByIdQuery';
 import useSporeByIdQuery from '@/hooks/query/useSporeByIdQuery';
-import useWalletConnect from '@/hooks/useWalletConnect';
 import { Cluster, getCluster } from '@/utils/cluster';
 import { Spore, getSpore, getSpores } from '@/utils/spore';
 import { BI, helpers } from '@ckb-lumos/lumos';
-import {
-  Text,
-  Image,
-  AspectRatio,
-  Card,
-  Flex,
-  Title,
-  Button,
-  Box,
-} from '@mantine/core';
+import { Flex, Text, Title, createStyles, Image, Box } from '@mantine/core';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
 
 export type SporePageProps = {
   cluster?: Cluster;
@@ -65,86 +51,86 @@ export const getStaticProps: GetStaticProps<
   };
 };
 
+const useStyles = createStyles((theme) => ({
+  title: {
+    color: theme.white,
+    textShadow: `
+      3px 0 0 ${theme.black},
+      -3px 0 0 ${theme.black},
+      0 3px 0 ${theme.black},
+      0 -3px 0 ${theme.black},
+      3px 3px 0 ${theme.black},
+      3px -3px 0 ${theme.black},
+      -3px 3px 0 ${theme.black},
+      -3px -3px 0 ${theme.black}
+    `,
+    mixBlendMode: 'darken',
+    fontSize: '32px',
+    overflow: 'visible',
+    lineHeight: '120%',
+    marginBottom: '25px',
+  },
+  image: {
+    maxWidth: '660px',
+  },
+  id: {
+    fontSize: '20px',
+    lineHeight: '1.5',
+    fontWeight: 'normal',
+  },
+  owner: {
+    fontSize: '16px',
+    lineHeight: '1.5',
+    fontWeight: 'normal',
+  },
+  capacity: {
+    fontSize: '20px',
+    lineHeight: '1.6',
+    fontWeight: 'bold',
+  },
+}));
+
 export default function SporePage(props: SporePageProps) {
+  const { classes } = useStyles();
   const router = useRouter();
   const { id } = router.query;
-  const { address } = useWalletConnect();
   const { data: spore } = useSporeByIdQuery(id as string, props.spore);
-  const { data: cluster } = useClusterByIdQuery(
-    spore?.clusterId || undefined,
-    props.cluster,
-  );
-
-  const transferSporeModal = useTransferSporeModal(spore);
-  const destroySporeModal = useDestroySporeModal(spore);
-
-  const isOwned = useMemo(() => {
-    if (!spore || !address) {
-      return false;
-    }
-    return helpers.encodeToAddress(spore.cell.cellOutput.lock) === address;
-  }, [spore, address]);
 
   if (!spore) {
     return null;
   }
 
   const owner = helpers.encodeToAddress(spore.cell.cellOutput.lock);
+  const capacity = BI.from(spore.cell.cellOutput.capacity).toNumber() / 10 ** 8;
 
   return (
     <Layout>
-      <Flex direction="row">
-        <Card withBorder radius="md" mr="md">
-          <AspectRatio ratio={1} w="30vw">
-            {spore && (
-              <Image
-                alt={spore.id}
-                src={`/api/media/${spore.id}`}
-              />
-            )}
-          </AspectRatio>
-        </Card>
-        <Flex direction="column" justify="space-between" mt="sm">
-          <Box>
-            <Title>{`${id!.slice(0, 10)}...${id!.slice(-10)}`}</Title>
-            <Text size="sm" color="gray">
-              Owned by {`${owner.slice(0, 10)}...${owner.slice(-10)}`}
+      <Flex direction="column" justify="center" align="center">
+        <Title order={1} className={classes.title}>
+          Spore Details
+        </Title>
+        <Image
+          src={`/api/media/${spore.id}`}
+          alt={spore.id}
+          className={classes.image}
+        />
+        <Flex mt="30px" direction="column" justify="center" align="center">
+          <Flex mb="16px">
+            <Text className={classes.id}>Spore Id:</Text>
+            <Text className={classes.id}>
+              {spore.id.slice(0, 10)}...{spore.id.slice(-10)}
             </Text>
-            <Card withBorder radius="md" mt="xl">
-              <Text mb="sm" color="gray">
-                Capacity
-              </Text>
-              <Title order={3}>
-                {BI.from(spore.cell.cellOutput.capacity).toNumber() / 10 ** 8}{' '}
-                CKB
-              </Title>
-            </Card>
-          </Box>
-
-          {isOwned && (
-            <Flex direction="row" justify="end" gap="md">
-              <Button
-                size="sm"
-                variant="light"
-                color="blue"
-                radius="md"
-                onClick={transferSporeModal.open}
-                loading={transferSporeModal.loading}
-              >
-                Transfer
-              </Button>
-              <Button
-                size="sm"
-                variant="light"
-                color="red"
-                radius="md"
-                onClick={destroySporeModal.open}
-                loading={destroySporeModal.loading}
-              >
-                Destroy
-              </Button>
-            </Flex>
-          )}
+          </Flex>
+          <Flex mb="16px">
+            <Text className={classes.owner}>Owned By:</Text>
+            <Text className={classes.owner}>
+              {owner.slice(0, 10)}...{owner.slice(-10)}
+            </Text>
+          </Flex>
+          <Flex>
+            <Text className={classes.capacity}>Capacity:</Text>
+            <Text className={classes.capacity}>{capacity} CKB</Text>
+          </Flex>
         </Flex>
       </Flex>
     </Layout>

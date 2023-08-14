@@ -3,13 +3,13 @@ import {
   Title,
   Text,
   Flex,
-  Button,
   Box,
   SimpleGrid,
-  Alert,
+  createStyles,
+  MediaQuery,
 } from '@mantine/core';
 import { useMemo } from 'react';
-import { IconAlertCircle } from '@tabler/icons-react';
+import Image from 'next/image';
 import { GetServerSideProps } from 'next';
 import { config, helpers } from '@ckb-lumos/lumos';
 import SporeCard from '@/components/SporeCard';
@@ -20,6 +20,7 @@ import useClusterByIdQuery from '@/hooks/query/useClusterByIdQuery';
 import useSporeByClusterQuery from '@/hooks/query/useSporeByClusterQuery';
 import { Cluster, getCluster } from '@/utils/cluster';
 import { Spore, getSpores } from '@/utils/spore';
+import { useMediaQuery } from '@mantine/hooks';
 
 export type HomePageProps = {
   cluster: Cluster | undefined;
@@ -28,7 +29,9 @@ export type HomePageProps = {
 
 const id = process.env.NEXT_PUBLIC_CLUSTER_ID!;
 
-export const getServerSideProps: GetServerSideProps<HomePageProps> = async () => {
+export const getServerSideProps: GetServerSideProps<
+  HomePageProps
+> = async () => {
   const cluster = await getCluster(id);
   const spores = await getSpores(id);
   return {
@@ -36,7 +39,29 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async () =>
   };
 };
 
+const useStyles = createStyles((theme) => ({
+  title: {
+    color: theme.white,
+    textShadow: `
+      3px 0 0 ${theme.black},
+      -3px 0 0 ${theme.black},
+      0 3px 0 ${theme.black},
+      0 -3px 0 ${theme.black},
+      3px 3px 0 ${theme.black},
+      3px -3px 0 ${theme.black},
+      -3px 3px 0 ${theme.black},
+      -3px -3px 0 ${theme.black}
+    `,
+    mixBlendMode: 'darken',
+    fontSize: '32px',
+    overflow: 'visible',
+    lineHeight: '120%',
+    marginBottom: '16px',
+  },
+}));
+
 export default function HomePage(props: HomePageProps) {
+  const { classes } = useStyles();
   const { address, connected } = useWalletConnect();
   const addSporeModal = useAddSporeModal(id as string);
 
@@ -71,40 +96,28 @@ export default function HomePage(props: HomePageProps) {
 
   return (
     <Layout>
-      <Flex direction="row" justify="space-between" align="end">
-        <Flex direction="column">
-          <Title order={1}>{cluster.name}</Title>
-          <Text>{cluster.description}</Text>
-          <Link
-            href={`/account/${ownerAddress}`}
-            style={{ textDecoration: 'none' }}
-          >
-            <Text size="sm" color="gray">
-              by {`${ownerAddress?.slice(0, 20)}...${ownerAddress?.slice(-20)}`}
-            </Text>
-          </Link>
+      <Flex direction="column">
+        <Flex direction="column" justify="center" align="center">
+          <Title order={1} className={classes.title}>
+            {cluster.name}
+          </Title>
+          {!connected && (
+            <Text color="brand.2">Connect your wallet to start minting!!</Text>
+          )}
         </Flex>
-        {canCreate && (
-          <Box style={{ cursor: connected ? 'pointer' : 'not-allowed' }}>
-            <Button
-              disabled={!connected}
-              onClick={addSporeModal.open}
-              loading={addSporeModal.loading}
-            >
-              Mint
-            </Button>
-          </Box>
-        )}
+        <Box mt="50px" mb="48px">
+          <Image
+            src="/meme.svg"
+            width="1304"
+            height="135"
+            alt="meme gratiffi"
+            layout="responsive"
+          />
+        </Box>
       </Flex>
 
-      {!canCreate && (
-        <Alert mt="md" icon={<IconAlertCircle size="1rem" />}>
-          This cluster does not belong to you, so you cannot mint a spore.
-        </Alert>
-      )}
-
       <Box mt={20}>
-        <SimpleGrid cols={4}>
+        <SimpleGrid cols={4} spacing="xl">
           {spores.map((spore) => {
             return <SporeCard key={spore.id} spore={spore} />;
           })}

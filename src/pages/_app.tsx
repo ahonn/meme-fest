@@ -6,6 +6,7 @@ import { Notifications } from '@mantine/notifications';
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import { ModalsProvider } from '@mantine/modals';
 import { useState } from 'react';
+import baseTheme from '@/theme';
 
 const { publicClient } = configureChains([mainnet], [publicProvider()]);
 
@@ -18,12 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
   return (
     <QueryClientProvider client={queryClient}>
-      <MantineProvider
-        withNormalizeCSS
-        theme={{
-          colorScheme: 'light',
-        }}
-      >
+      <MantineProvider withNormalizeCSS theme={baseTheme}>
         <ModalsProvider>
           <Hydrate state={pageProps.dehydratedState}>
             <WagmiConfig config={config}>

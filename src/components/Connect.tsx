@@ -67,7 +67,7 @@ export default function Connect() {
           </Button>
         </Button.Group>
       ) : (
-        <Button onClick={open}>Connect</Button>
+        <Button onClick={open}>Connect Wallet</Button>
       )}
     </>
   );
