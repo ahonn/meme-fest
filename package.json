@@ -26,6 +26,7 @@
     "crypto-browserify": "^3.12.0",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.12",
+    "jotai": "^2.3.1",
     "next": "^13.4.12",
     "next-connect": "^1.0.0-next.4",
     "react": "18.2.0",

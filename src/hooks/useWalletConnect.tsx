@@ -1,8 +1,7 @@
 import { Transaction, config, helpers } from '@ckb-lumos/lumos';
 import { useLocalStorage } from '@mantine/hooks';
-import { useCallback, useMemo } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 import superjson from 'superjson';
-import useCKBullSigner from './useCKBullSigner';
 import useMetaMask from './useMetaMask';
 
 const defaultValue = {
@@ -17,7 +16,13 @@ interface Connector {
   ): Promise<Transaction>;
 }
 
-export function useWalletStore() {
+export const WalletContext = createContext({
+  ...defaultValue,
+  connected: false,
+  update: (value: Partial<typeof defaultValue>) => {},
+});
+
+export function WalletProvider(props: { children: React.ReactNode }) {
   const [wallet, setWallet] = useLocalStorage<typeof defaultValue>({
     key: 'spore.wallet',
     defaultValue,
@@ -28,26 +33,32 @@ export function useWalletStore() {
 
   const { address, connectorType } = wallet;
 
-  const update = useCallback((values: Partial<typeof defaultValue>) => {
-    setWallet({
-      ...wallet,
-      ...values,
-    });
-  }, [setWallet, wallet])
+  const update = useCallback(
+    (values: Partial<typeof defaultValue>) => {
+      setWallet({
+        ...wallet,
+        ...values,
+      });
+    },
+    [setWallet, wallet],
+  );
 
   const connected = useMemo(() => !!address, [address]);
-
-  return {
+  const store = {
     address,
     connected,
     connectorType,
     update,
   };
+  return (
+    <WalletContext.Provider value={store}>
+      {props.children}
+    </WalletContext.Provider>
+  );
 }
 
 export default function useWalletConnect() {
-  const { address, connected = false, connectorType } = useWalletStore();
-  const ckbullSigner = useCKBullSigner();
+  const { address, connected } = useContext(WalletContext);
   const metaMask = useMetaMask();
 
   const lock = useMemo(() => {
@@ -55,11 +66,7 @@ export default function useWalletConnect() {
     return address ? helpers.parseAddress(address) : undefined;
   }, [address]);
 
-  const connector: Connector = useMemo(
-    () => (connectorType === 'ckbull' ? ckbullSigner : metaMask),
-    [ckbullSigner, metaMask, connectorType],
-  );
-
+  const connector: Connector = useMemo(() => metaMask, [metaMask]);
   const connect = useMemo(() => connector.connect, [connector]);
   const signTransaction = useMemo(() => connector.signTransaction, [connector]);
 

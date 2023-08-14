@@ -2,7 +2,6 @@ import {
   AppShell,
   Container,
   Flex,
-  Group,
   Header,
   createStyles,
 } from '@mantine/core';
@@ -33,9 +32,7 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
           <Container size="xl" h="100%">
             <Flex h="100%" justify="space-between" align="center" px="40px">
               <Logo />
-              <Group>
-                <Connect />
-              </Group>
+              <Connect />
             </Flex>
           </Container>
         </Header>

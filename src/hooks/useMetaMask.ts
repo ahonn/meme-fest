@@ -1,14 +1,14 @@
 import { commons, config, helpers } from '@ckb-lumos/lumos';
 import { bytes } from '@ckb-lumos/codec';
 import { blockchain } from '@ckb-lumos/base';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import {
   useAccount as useWagmiAccount,
   useConnect as useWagmiConnect,
 } from 'wagmi';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-import { useWalletStore } from './useWalletConnect';
 import { signMessage } from 'wagmi/actions';
+import { WalletContext } from './useWalletConnect';
 
 function toCKBAddress(address: `0x${string}`) {
   config.initializeConfig(config.predefined.AGGRON4);
@@ -19,7 +19,7 @@ function toCKBAddress(address: `0x${string}`) {
 }
 
 export default function useMetaMask() {
-  const { address, connected, connectorType, update } = useWalletStore();
+  const { address, connected, connectorType, update } = useContext(WalletContext);
   const { connect: connectMetaMask } = useWagmiConnect({
     connector: new MetaMaskConnector(),
   });

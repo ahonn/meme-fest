@@ -7,6 +7,7 @@ import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import { ModalsProvider } from '@mantine/modals';
 import { useState } from 'react';
 import baseTheme from '@/theme';
+import { WalletProvider } from '@/hooks/useWalletConnect';
 
 const { publicClient } = configureChains([mainnet], [publicProvider()]);
 
@@ -34,10 +35,12 @@ export default function App({ Component, pageProps }: AppProps) {
           }}
         >
           <Hydrate state={pageProps.dehydratedState}>
-            <WagmiConfig config={config}>
-              <Notifications />
-              <Component {...pageProps} />
-            </WagmiConfig>
+            <WalletProvider>
+              <WagmiConfig config={config}>
+                <Notifications />
+                <Component {...pageProps} />
+              </WagmiConfig>
+            </WalletProvider>
           </Hydrate>
         </ModalsProvider>
       </MantineProvider>
