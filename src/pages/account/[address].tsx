@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import { Box, Text, createStyles, Flex, SimpleGrid } from '@mantine/core';
 import { useMemo } from 'react';
 import SporeCard from '@/components/SporeCard';
-import { Cell, helpers } from '@ckb-lumos/lumos';
+import { Cell, Script, helpers } from '@ckb-lumos/lumos';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import useSporesQuery from '@/hooks/query/useSporesQuery';
@@ -51,14 +51,14 @@ export const getStaticProps: GetStaticProps<
   const clusters = await getClusters();
   const spores = await getSpores();
 
-  const isOwned = (cell: Cell) => {
-    return helpers.encodeToAddress(cell.cellOutput.lock) === address;
+  const isOwned = (lock: Script) => {
+    return helpers.encodeToAddress(lock) === address;
   };
 
   return {
     props: {
-      clusters: clusters.filter(({ cell }) => isOwned(cell)),
-      spores: spores.filter(({ cell }) => isOwned(cell)),
+      clusters: clusters.filter(({ cell }) => isOwned(cell.cellOutput.lock)),
+      spores: spores.filter(({ cell }) => isOwned(cell.cellOutput.lock)),
     },
   };
 };
