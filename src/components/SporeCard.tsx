@@ -10,6 +10,7 @@ import {
   AspectRatio,
 } from '@mantine/core';
 import Link from 'next/link';
+import { getStrokeShadow } from './ShadowTitle';
 
 export interface SporeCardProps {
   spore: Spore;

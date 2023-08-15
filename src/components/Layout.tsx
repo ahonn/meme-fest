@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import Logo from './Logo';
 import Connect from './Connect';
-import ParallaxText from './ParallaxText';
+import Marquee from './Marquee';
 import Link from 'next/link';
 
 const useStyles = createStyles((theme) => ({
@@ -43,7 +43,7 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
             <Box className={classes.banner}>
               <Flex align="center" h="100%" w="200%">
                 <Link style={{ textDecoration: 'none' }} href="/">
-                  <ParallaxText baseVelocity={3}>
+                  <Marquee baseVelocity={3}>
                     <Text
                       component="span"
                       color="white"
@@ -58,7 +58,7 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
                       </Text>
                       .
                     </Text>
-                  </ParallaxText>
+                  </Marquee>
                 </Link>
               </Flex>
             </Box>
