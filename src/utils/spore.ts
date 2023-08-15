@@ -56,6 +56,14 @@ export async function getSpores(clusterId?: string, options?: QueryOptions) {
 }
 
 export async function getSpore(id: string, options?: QueryOptions) {
-  const spores = await getSpores(undefined, options);
-  return spores.find((spore) => spore.id === id);
+  const config = predefinedSporeConfigs[options?.network ?? 'Aggron4'];
+  const indexer = new Indexer(config.ckbIndexerUrl);
+  const collector = indexer.collector({
+    type: { ...config.scripts.Spore.script, args: id },
+  });
+
+  for await (const cell of collector.collect()) {
+    const spore = getSporeFromCell(cell, options?.includeContent);
+    return spore;
+  }
 }

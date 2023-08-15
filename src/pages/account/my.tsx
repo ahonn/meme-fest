@@ -16,6 +16,7 @@ import { Spore } from '@/utils/spore';
 import useWalletConnect from '@/hooks/useWalletConnect';
 import useAddSporeModal from '@/hooks/modal/useAddSporeModal';
 import ShadowTitle from '@/components/ShadowTitle';
+import SkeletonCard from '@/components/SkeletonCard';
 
 export type AccountPageProps = {
   clusters: Cluster[];
@@ -68,17 +69,31 @@ export default function AccountPage(props: AccountPageProps) {
           Mint
         </Button>
       </Flex>
-      {spores.length > 0 && (
-        <Box mt="50px">
-          <Text className={classes.count}>
-            {spores.length} item{spores.length > 1 && 's'}
-          </Text>
+      {sporesQuery.isLoading ? (
+        <Box mt="114px">
           <SimpleGrid cols={4} spacing="xl" mt="24px">
-            {spores.map((spore) => (
-              <SporeCard key={spore.id} spore={spore} />
-            ))}
+            {Array(4)
+              .fill(0)
+              .map((_, index) => (
+                <SkeletonCard key={`skeleton-${index}`} />
+              ))}
           </SimpleGrid>
         </Box>
+      ) : (
+        <>
+          {spores.length > 0 && (
+            <Box mt="50px">
+              <Text className={classes.count}>
+                {spores.length} item{spores.length > 1 && 's'}
+              </Text>
+              <SimpleGrid cols={4} spacing="xl" mt="24px">
+                {spores.map((spore) => (
+                  <SporeCard key={spore.id} spore={spore} />
+                ))}
+              </SimpleGrid>
+            </Box>
+          )}
+        </>
       )}
     </Layout>
   );

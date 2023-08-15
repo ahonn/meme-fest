@@ -5,6 +5,7 @@ import {
   createCluster as _createCluster,
 } from '@spore-sdk/core';
 import pick from 'lodash/pick';
+import { Network } from './network';
 
 const hex2String = (hex: string) => {
   return Buffer.from(hex, 'hex').toString('utf-8');
@@ -28,8 +29,12 @@ export function getClusterFromCell(cell: Cell): Cluster {
   return cluster;
 }
 
-export async function getClusters() {
-  const config = predefinedSporeConfigs.Aggron4;
+export type QueryOptions = {
+  network?: Network;
+}
+
+export async function getClusters(options?: QueryOptions) {
+  const config = predefinedSporeConfigs[options?.network ?? 'Aggron4'];
   const indexer = new Indexer(config.ckbIndexerUrl);
   const collector = indexer.collector({
     type: { ...config.scripts.Cluster.script, args: '0x' },
@@ -44,7 +49,15 @@ export async function getClusters() {
   return clusters;
 }
 
-export async function getCluster(id: string) {
-  const clusters = await getClusters();
-  return clusters.find((cluster) => cluster.id === id);
+export async function getCluster(id: string, options?: QueryOptions) {
+  const config = predefinedSporeConfigs[options?.network ?? 'Aggron4'];
+  const indexer = new Indexer(config.ckbIndexerUrl);
+  const collector = indexer.collector({
+    type: { ...config.scripts.Cluster.script, args: id },
+  });
+
+  for await (const cell of collector.collect()) {
+    const cluster = getClusterFromCell(cell);
+    return cluster;
+  }
 }
