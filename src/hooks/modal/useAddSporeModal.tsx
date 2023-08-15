@@ -14,7 +14,6 @@ import {
 import { notifications } from '@mantine/notifications';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import Image from 'next/image';
-import useClustersQuery from '../query/useClustersQuery';
 import useWalletConnect from '../useWalletConnect';
 import useAddSporeMutation from '../mutation/useAddSporeMutation';
 import ShadowTitle from '@/components/ShadowTitle';
@@ -33,7 +32,7 @@ const useStyles = createStyles((theme) => ({
     borderColor: theme.colors.neutral[0],
     paddingTop: theme.spacing.md,
     paddingBottom: theme.spacing.md,
-  }
+  },
 }));
 
 export default function useAddSporeModal(clusterId?: string) {
@@ -46,12 +45,7 @@ export default function useAddSporeModal(clusterId?: string) {
   const openDropzoneRef = useRef<() => void>(null);
   const modalId = useId();
 
-  const clustersQuery = useClustersQuery();
-  const cluster = useMemo(
-    () => clustersQuery.data?.find(({ id }) => id === clusterId),
-    [clustersQuery, clusterId],
-  );
-  const addSporeMutation = useAddSporeMutation(cluster, {
+  const addSporeMutation = useAddSporeMutation({
     onSigned: () => setTxStatus('pending'),
     onSuccess: () => setTxStatus('success'),
     onRefreshed: () => close(),

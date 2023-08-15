@@ -1,4 +1,4 @@
-import { Spore } from '@/utils/spore';
+import { Spore } from '@/spore';
 import { BI } from '@ckb-lumos/lumos';
 import {
   Text,
@@ -10,7 +10,6 @@ import {
   AspectRatio,
 } from '@mantine/core';
 import Link from 'next/link';
-import { getStrokeShadow } from './ShadowTitle';
 
 export interface SporeCardProps {
   spore: Spore;
@@ -67,7 +66,7 @@ export default function SporeCard({ spore }: SporeCardProps) {
           <Group p="32px" bg="brand.1">
             <Flex direction="column">
               <Text>{`${spore.id.slice(0, 10)}...${spore.id.slice(-10)}`}</Text>
-              <Text>
+              <Text size="20px">
                 {BI.from(spore.cell.cellOutput.capacity).toNumber() / 10 ** 8}{' '}
                 CKB
               </Text>

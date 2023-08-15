@@ -8,15 +8,15 @@ import {
   Button,
 } from '@mantine/core';
 import { useMemo } from 'react';
+import Image from 'next/image';
 import SporeCard from '@/components/SporeCard';
-import { config, helpers } from '@ckb-lumos/lumos';
-import useSporesQuery from '@/hooks/query/useSporesQuery';
-import { Cluster } from '@/utils/cluster';
-import { Spore } from '@/utils/spore';
 import useWalletConnect from '@/hooks/useWalletConnect';
 import useAddSporeModal from '@/hooks/modal/useAddSporeModal';
 import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
+import { Spore } from '@/spore';
+import { useQuery } from 'react-query';
+import { Cluster } from '@/cluster';
 
 export type AccountPageProps = {
   clusters: Cluster[];
@@ -37,23 +37,26 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+const clusterId = process.env.NEXT_PUBLIC_CLUSTER_ID!;
+
 export default function AccountPage(props: AccountPageProps) {
   const { classes } = useStyles();
   const { address } = useWalletConnect();
-  const sporesQuery = useSporesQuery(props.spores);
-  const addSporeModal = useAddSporeModal(process.env.NEXT_PUBLIC_CLUSTER_ID!);
+  const addSporeModal = useAddSporeModal(clusterId);
 
-  const spores = useMemo(() => {
-    if (!address) return [];
-    return (
-      sporesQuery.data?.filter(
-        ({ cell }) =>
-          helpers.encodeToAddress(cell.cellOutput.lock, {
-            config: config.predefined.AGGRON4,
-          }) === address,
-      ) || []
-    );
-  }, [sporesQuery.data, address]);
+  const { data: spores = [], isLoading } = useQuery(
+    ['spores', address],
+    async () => {
+      const response = await fetch(
+        `/api/spore?address=${address}&clusterId=${clusterId}`,
+      );
+      const data = await response.json();
+      return data as Spore[];
+    },
+    {
+      initialData: props.spores,
+    },
+  );
 
   const displayAddress = useMemo(() => {
     if (!address) return '';
@@ -69,7 +72,7 @@ export default function AccountPage(props: AccountPageProps) {
           Mint
         </Button>
       </Flex>
-      {sporesQuery.isLoading ? (
+      {isLoading ? (
         <Box mt="114px">
           <SimpleGrid cols={4} spacing="xl" mt="24px">
             {Array(4)
@@ -81,7 +84,7 @@ export default function AccountPage(props: AccountPageProps) {
         </Box>
       ) : (
         <>
-          {spores.length > 0 && (
+          {spores.length > 0 ? (
             <Box mt="50px">
               <Text className={classes.count}>
                 {spores.length} item{spores.length > 1 && 's'}
@@ -92,6 +95,17 @@ export default function AccountPage(props: AccountPageProps) {
                 ))}
               </SimpleGrid>
             </Box>
+          ) : (
+            <Flex direction="column" justify="center" align="center">
+              <Box mt="120px">
+                <Image
+                  src="/image/time-to-mint.png"
+                  alt="time to mint"
+                  height="200"
+                  width="200"
+                />
+              </Box>
+            </Flex>
           )}
         </>
       )}

@@ -1,12 +1,12 @@
+import { Cluster } from '@/cluster';
 import Layout from '@/components/Layout';
 import ShadowTitle from '@/components/ShadowTitle';
-import useSporeByIdQuery from '@/hooks/query/useSporeByIdQuery';
-import { Cluster } from '@/utils/cluster';
-import { Spore, getSpore, getSpores } from '@/utils/spore';
+import SporeService, { Spore } from '@/spore';
 import { BI, config, helpers } from '@ckb-lumos/lumos';
 import { Flex, Text, createStyles, Image } from '@mantine/core';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 
 export type SporePageProps = {
   cluster?: Cluster;
@@ -25,7 +25,9 @@ export const getStaticPaths: GetStaticPaths<SporePageParams> = async () => {
     };
   }
 
-  const spores = await getSpores(process.env.NEXT_PUBLIC_CLUSTER_ID!);
+  const spores = await SporeService.shared.list(
+    process.env.NEXT_PUBLIC_CLUSTER_ID!,
+  );
   const paths = spores.map(({ id }) => ({
     params: { id },
   }));
@@ -40,7 +42,7 @@ export const getStaticProps: GetStaticProps<
   SporePageParams
 > = async (context) => {
   const { id } = context.params!;
-  const spore = await getSpore(id as string);
+  const spore = await SporeService.shared.get(id as string);
   return {
     props: { spore },
   };
@@ -71,7 +73,17 @@ export default function SporePage(props: SporePageProps) {
   const { classes } = useStyles();
   const router = useRouter();
   const { id } = router.query;
-  const { data: spore } = useSporeByIdQuery(id as string, props.spore);
+  const { data: spore } = useQuery(
+    ['spore', id],
+    async () => {
+      const response = await fetch(`/api/spore/${id}`);
+      const data = await response.json();
+      return data as Spore;
+    },
+    {
+      initialData: props.spore,
+    },
+  );
 
   if (!spore) {
     return null;

@@ -4,12 +4,12 @@ import Image from 'next/image';
 import SporeCard from '@/components/SporeCard';
 import useWalletConnect from '@/hooks/useWalletConnect';
 import useAddSporeModal from '@/hooks/modal/useAddSporeModal';
-import useClusterByIdQuery from '@/hooks/query/useClusterByIdQuery';
-import useSporeByClusterQuery from '@/hooks/query/useSporeByClusterQuery';
-import { Cluster } from '@/utils/cluster';
-import { Spore } from '@/utils/spore';
 import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
+import Connect from '@/components/Connect';
+import { Spore } from '@/spore';
+import { useQuery } from 'react-query';
+import { Cluster } from '@/cluster';
 
 export type HomePageProps = {
   cluster: Cluster | undefined;
@@ -22,10 +22,24 @@ export default function HomePage(props: HomePageProps) {
   const { connected } = useWalletConnect();
   const addSporeModal = useAddSporeModal(id as string);
 
-  const { data: cluster } = useClusterByIdQuery(id as string, props.cluster);
-  const { data: spores = [], isLoading } = useSporeByClusterQuery(
-    id as string,
-    props.spores,
+  const { data: cluster } = useQuery(['cluster', id], async () => {
+    const response = await fetch(
+      `/api/cluster/${encodeURIComponent(id as string)}`,
+    );
+    const data = await response.json();
+    return data as Cluster;
+  });
+
+  const { data: spores = [], isLoading } = useQuery(
+    ['spores', id],
+    async () => {
+      const response = await fetch(
+        `/api/spore?clusterId=${encodeURIComponent(id)}`,
+      );
+      const data = await response.json();
+      return data as Spore[];
+    },
+    { refetchOnWindowFocus: true },
   );
 
   if (!cluster) {
@@ -55,17 +69,57 @@ export default function HomePage(props: HomePageProps) {
       </Flex>
 
       <Box mt={20}>
-        <SimpleGrid cols={4} spacing="xl">
-          {isLoading
-            ? Array(4)
-                .fill(0)
-                .map((_, index) => {
-                  return <SkeletonCard key={`skeleton_${index}`} />;
-                })
-            : spores.map((spore) => {
-                return <SporeCard key={spore.id} spore={spore} />;
-              })}
-        </SimpleGrid>
+        {isLoading || spores.length > 0 ? (
+          <SimpleGrid cols={4} spacing="xl">
+            {isLoading
+              ? Array(4)
+                  .fill(0)
+                  .map((_, index) => {
+                    return <SkeletonCard key={`skeleton_${index}`} />;
+                  })
+              : spores.map((spore) => {
+                  return <SporeCard key={spore.id} spore={spore} />;
+                })}
+          </SimpleGrid>
+        ) : (
+          <Flex
+            direction="column"
+            justify="center"
+            align="center"
+            mt="-30px"
+            sx={{
+              borderTopWidth: '1px',
+              borderTopStyle: 'solid',
+              borderTopColor: 'black',
+            }}
+          >
+            {connected ? (
+              <Box mt="100px">
+                <Image
+                  src="/image/time-to-mint.png"
+                  alt="time to mint"
+                  height="200"
+                  width="200"
+                />
+              </Box>
+            ) : (
+              <Box>
+                <Box mt="60px">
+                  <Image
+                    src="/image/connect-wallet.png"
+                    alt="connect wallet"
+                    height="200"
+                    width="200"
+                  />
+                </Box>
+                <Text mt="28px">{"Time to mint! Wallet's calling."}</Text>
+                <Box mt="50px">
+                  <Connect />
+                </Box>
+              </Box>
+            )}
+          </Flex>
+        )}
       </Box>
     </Layout>
   );

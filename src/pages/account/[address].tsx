@@ -2,17 +2,15 @@ import Layout from '@/components/Layout';
 import { Box, Text, createStyles, Flex, SimpleGrid } from '@mantine/core';
 import { useMemo } from 'react';
 import SporeCard from '@/components/SporeCard';
-import { Script, helpers } from '@ckb-lumos/lumos';
+import { config, helpers } from '@ckb-lumos/lumos';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import useSporesQuery from '@/hooks/query/useSporesQuery';
-import { Cluster, getClusters } from '@/utils/cluster';
-import { Spore, getSpores } from '@/utils/spore';
 import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
+import SporeService, { Spore } from '@/spore';
+import { useQuery } from 'react-query';
 
 export type AccountPageProps = {
-  clusters: Cluster[];
   spores: Spore[];
 };
 
@@ -29,7 +27,9 @@ export const getStaticPaths: GetStaticPaths<AccountPageParams> = async () => {
   }
 
   const addresses = new Set<string>();
-  const spores = await getSpores(process.env.NEXT_PUBLIC_CLUSTER_ID!);
+  const spores = await SporeService.shared.list(
+    process.env.NEXT_PUBLIC_CLUSTER_ID!,
+  );
   const cells = spores.map(({ cell }) => cell);
   cells.forEach((cell) => {
     addresses.add(helpers.encodeToAddress(cell.cellOutput.lock));
@@ -49,17 +49,17 @@ export const getStaticProps: GetStaticProps<
   AccountPageParams
 > = async (context) => {
   const { address } = context.params!;
-  const clusters = await getClusters();
-  const spores = await getSpores();
-
-  const isOwned = (lock: Script) => {
-    return helpers.encodeToAddress(lock) === address;
-  };
+  const lock = helpers.parseAddress(address as string, {
+    config: config.predefined.AGGRON4,
+  });
+  const spores = await SporeService.shared.listByLock(
+    lock,
+    process.env.NEXT_PUBLIC_CLUSTER_ID!,
+  );
 
   return {
     props: {
-      clusters: clusters.filter(({ cell }) => isOwned(cell.cellOutput.lock)),
-      spores: spores.filter(({ cell }) => isOwned(cell.cellOutput.lock)),
+      spores,
     },
   };
 };
@@ -78,16 +78,17 @@ export default function AccountPage(props: AccountPageProps) {
   const { classes } = useStyles();
   const router = useRouter();
   const { address } = router.query;
-  const sporesQuery = useSporesQuery(props.spores);
-
-  const spores = useMemo(() => {
-    if (!address) return [];
-    return (
-      sporesQuery.data?.filter(
-        ({ cell }) => helpers.encodeToAddress(cell.cellOutput.lock) === address,
-      ) || []
-    );
-  }, [sporesQuery.data, address]);
+  const { data: spores = [], isLoading } = useQuery(
+    ['spores', address],
+    async () => {
+      const response = await fetch(`/api/spore?address=${address}`);
+      const data = await response.json();
+      return data as Spore[];
+    },
+    {
+      initialData: props.spores,
+    },
+  );
 
   const displayAddress = useMemo(() => {
     if (!address) return '';
@@ -99,7 +100,7 @@ export default function AccountPage(props: AccountPageProps) {
       <Flex direction="column" justify="center" align="center">
         <ShadowTitle>{displayAddress}</ShadowTitle>
       </Flex>
-      {sporesQuery.isLoading ? (
+      {isLoading ? (
         <Box mt="114px">
           <SimpleGrid cols={4} spacing="xl" mt="24px">
             {Array(4)
