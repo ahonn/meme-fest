@@ -32,7 +32,11 @@ export const getStaticPaths: GetStaticPaths<AccountPageParams> = async () => {
   );
   const cells = spores.map(({ cell }) => cell);
   cells.forEach((cell) => {
-    addresses.add(helpers.encodeToAddress(cell.cellOutput.lock));
+    addresses.add(
+      helpers.encodeToAddress(cell.cellOutput.lock, {
+        config: config.predefined.AGGRON4,
+      }),
+    );
   });
 
   const paths = Array.from(addresses).map((address) => ({
@@ -87,6 +91,7 @@ export default function AccountPage(props: AccountPageProps) {
     },
     {
       initialData: props.spores,
+      refetchOnWindowFocus: true,
     },
   );
 

@@ -55,6 +55,7 @@ export default function AccountPage(props: AccountPageProps) {
     },
     {
       initialData: props.spores,
+      refetchOnWindowFocus: true,
     },
   );
 
