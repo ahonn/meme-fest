@@ -42,23 +42,24 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
           <Header height="160px" className={classes.header}>
             <Box className={classes.banner}>
               <Flex align="center" h="100%" w="200%">
-                <ParallaxText baseVelocity={5}>
-                  <Text
-                    component="span"
-                    color="white"
-                    size="24px"
-                    weight="bold"
-                    mr="md"
-                    inline
-                  >
-                    Click here to get more information from{' '}
-                    <Link style={{ textDecoration: 'none' }} href="/">
+                <Link style={{ textDecoration: 'none' }} href="/">
+                  <ParallaxText baseVelocity={3}>
+                    <Text
+                      component="span"
+                      color="white"
+                      size="24px"
+                      weight="bold"
+                      mr="md"
+                      inline
+                    >
+                      Click here to get more information from{' '}
                       <Text component="span" color="brand.0" inline>
                         HaCKBee
                       </Text>
-                    </Link>
-                  </Text>
-                </ParallaxText>
+                      .
+                    </Text>
+                  </ParallaxText>
+                </Link>
               </Flex>
             </Box>
             <Box className={classes.container}>

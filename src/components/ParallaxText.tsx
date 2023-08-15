@@ -5,7 +5,8 @@ import {
   motion,
 } from 'framer-motion';
 import { wrap } from '@motionone/utils';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import { useElementSize, useViewportSize } from '@mantine/hooks';
 
 interface ParallaxProps {
   children: React.ReactNode;
@@ -17,8 +18,12 @@ export default function ParallaxText({
   baseVelocity = 100,
 }: ParallaxProps) {
   const baseX = useMotionValue(0);
+  const { width } = useViewportSize();
+  const { ref, width: elementWidth } = useElementSize();
 
-  const x = useTransform(baseX, (v) => `${wrap(-20, 0, v)}%`);
+  const min = useMemo(() => (1 - width / elementWidth) * 100, [width, elementWidth]);
+  console.log(min);
+  const x = useTransform(baseX, (v) => `${wrap(-min, 0, v)}%`);
 
   const directionFactor = useRef<number>(1);
   useAnimationFrame((t, delta) => {
@@ -27,7 +32,10 @@ export default function ParallaxText({
   });
 
   return (
-    <motion.div style={{ x, width: '200%' }}>
+    <motion.div
+      ref={ref}
+      style={{ x, textAlign: 'right', whiteSpace: 'nowrap' }}
+    >
       {Array(4)
         .fill(0)
         .map((_, index) => (
