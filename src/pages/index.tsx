@@ -7,10 +7,9 @@ import useAddSporeModal from '@/hooks/modal/useAddSporeModal';
 import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import Connect from '@/components/Connect';
-import SporeService, { Spore } from '@/spore';
+import { Spore } from '@/spore';
 import { useQuery } from 'react-query';
-import ClusterService, { Cluster } from '@/cluster';
-import { GetStaticProps } from 'next';
+import { Cluster } from '@/cluster';
 
 export type HomePageProps = {
   cluster: Cluster | undefined;
@@ -19,15 +18,15 @@ export type HomePageProps = {
 
 const id = process.env.NEXT_PUBLIC_CLUSTER_ID!;
 
-export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-  const [cluster, spores] = await Promise.all([
-    ClusterService.shared.get(id),
-    SporeService.shared.list(id),
-  ]);
-  return {
-    props: { cluster, spores },
-  };
-};
+// export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
+//   const [cluster, spores] = await Promise.all([
+//     ClusterService.shared.get(id),
+//     SporeService.shared.list(id),
+//   ]);
+//   return {
+//     props: { cluster, spores },
+//   };
+// };
 
 export default function HomePage(props: HomePageProps) {
   const { connected } = useWalletConnect();
