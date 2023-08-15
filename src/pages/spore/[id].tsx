@@ -3,8 +3,11 @@ import Layout from '@/components/Layout';
 import ShadowTitle from '@/components/ShadowTitle';
 import SporeService, { Spore } from '@/spore';
 import { BI, config, helpers } from '@ckb-lumos/lumos';
-import { Flex, Text, createStyles, Image } from '@mantine/core';
+import { Flex, Text, createStyles, Image, Box, Tooltip } from '@mantine/core';
+import { useClipboard } from '@mantine/hooks';
+import { IconCopy } from '@tabler/icons-react';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 
@@ -73,6 +76,7 @@ export default function SporePage(props: SporePageProps) {
   const { classes } = useStyles();
   const router = useRouter();
   const { id } = router.query;
+  const clipoard = useClipboard();
   const { data: spore } = useQuery(
     ['spore', id],
     async () => {
@@ -104,23 +108,52 @@ export default function SporePage(props: SporePageProps) {
           className={classes.image}
         />
         <Flex mt="30px" direction="column" justify="center" align="center">
-          <Flex mb="16px">
-            <Text className={classes.id}>Spore Id:</Text>
-            <Text className={classes.id}>
-              {spore.id.slice(0, 10)}...{spore.id.slice(-10)}
+          <Flex mb="16px" align="center">
+            <Text className={classes.id} mr="5px">
+              Spore Id:
             </Text>
+            <Link
+              href={`https://pudge.explorer.nervos.org/transaction/${spore.cell.outPoint?.txHash}`}
+              target="_blank"
+              style={{ textDecoration: 'none' }}
+            >
+              <Text color="brand.1" className={classes.id} mr="5px">
+                {spore.id.slice(0, 10)}...{spore.id.slice(-10)}
+              </Text>
+            </Link>
+            <Tooltip label={clipoard.copied ? 'Copied!' : 'Copy'}>
+              <IconCopy
+                size={18}
+                style={{ cursor: 'pointer' }}
+                onClick={() => clipoard.copy(spore.id)}
+              />
+            </Tooltip>
           </Flex>
-          <Flex mb="16px">
-            <Text className={classes.owner}>Owned By:</Text>
+          <Flex mb="16px" align="center">
+            <Text className={classes.owner} mr="5px">
+              Owned By:
+            </Text>
             <Text
+              mr="5px"
+              color="brand.1"
+              sx={{ cursor: 'pointer' }}
               className={classes.owner}
               onClick={() => router.push(`/account/${owner}`)}
             >
               {owner.slice(0, 10)}...{owner.slice(-10)}
             </Text>
+            <Tooltip label={clipoard.copied ? 'Copied!' : 'Copy'}>
+              <IconCopy
+                size={18}
+                style={{ cursor: 'pointer' }}
+                onClick={() => clipoard.copy(owner)}
+              />
+            </Tooltip>
           </Flex>
           <Flex>
-            <Text className={classes.capacity}>Capacity:</Text>
+            <Text className={classes.capacity} mr="5px">
+              Capacity:
+            </Text>
             <Text className={classes.capacity}>{capacity} CKB</Text>
           </Flex>
         </Flex>

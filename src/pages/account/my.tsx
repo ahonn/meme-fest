@@ -6,6 +6,7 @@ import {
   Flex,
   SimpleGrid,
   Button,
+  Tooltip,
 } from '@mantine/core';
 import { useMemo } from 'react';
 import Image from 'next/image';
@@ -17,6 +18,7 @@ import SkeletonCard from '@/components/SkeletonCard';
 import { Spore } from '@/spore';
 import { useQuery } from 'react-query';
 import { Cluster } from '@/cluster';
+import { useClipboard } from '@mantine/hooks';
 
 export type AccountPageProps = {
   clusters: Cluster[];
@@ -41,6 +43,7 @@ const clusterId = process.env.NEXT_PUBLIC_CLUSTER_ID!;
 
 export default function AccountPage(props: AccountPageProps) {
   const { classes } = useStyles();
+  const clipboard = useClipboard();
   const { address } = useWalletConnect();
   const addSporeModal = useAddSporeModal(clusterId);
 
@@ -68,7 +71,18 @@ export default function AccountPage(props: AccountPageProps) {
     <Layout>
       <Flex direction="column" justify="center" align="center">
         <ShadowTitle>My Spores</ShadowTitle>
-        <Text>{displayAddress}</Text>
+        <Tooltip
+          label={clipboard.copied ? 'Copied!' : 'Copy'}
+          position="bottom"
+          withArrow
+        >
+          <Text
+            style={{ cursor: 'pointer' }}
+            onClick={() => clipboard.copy(address)}
+          >
+            {displayAddress}
+          </Text>
+        </Tooltip>
         <Button mt="16px" onClick={addSporeModal.open}>
           Mint
         </Button>
