@@ -2,12 +2,12 @@ import { Spore } from '@/utils/spore';
 import { BI } from '@ckb-lumos/lumos';
 import {
   Text,
-  AspectRatio,
   Card,
   Image,
   Flex,
   Group,
   createStyles,
+  AspectRatio,
 } from '@mantine/core';
 import Link from 'next/link';
 
@@ -17,6 +17,7 @@ export interface SporeCardProps {
 
 const useStyles = createStyles((theme) => ({
   card: {
+    height: '100%',
     borderRadius: '0px',
     borderWidth: '1px',
     borderColor: theme.black,
@@ -25,6 +26,18 @@ const useStyles = createStyles((theme) => ({
       .fill(0)
       .map((_, index) => `${index + 1}px ${index + 1}px 0 ${theme.black}`)
       .join(','),
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+
+    '.mantine-Image-figure': {
+      height: '100%',
+    },
+
+    '.mantine-Image-imageWrapper': {
+      height: '100%',
+    },
   },
 }));
 
@@ -38,17 +51,16 @@ export default function SporeCard({ spore }: SporeCardProps) {
       prefetch
       passHref
     >
-      <Card
-        key={spore.id}
-        className={classes.card}
-        shadow="sm"
-        radius="md"
-        p="0"
-      >
+      <Card className={classes.card} shadow="sm" radius="md" p="0">
         <Flex h="100%" direction="column" justify="space-between">
-          <Card.Section>
+          <Card.Section px="md" sx={{ flex: 1 }}>
             <AspectRatio ratio={1}>
-              <Image alt={spore.id} src={`/api/media/${spore.id}`} />
+              <Image
+                height="100%"
+                className={classes.image}
+                alt={spore.id}
+                src={`/api/media/${spore.id}`}
+              />
             </AspectRatio>
           </Card.Section>
           <Group p="32px" bg="brand.1">

@@ -16,7 +16,7 @@ const baseTheme: MantineThemeOverride = {
   colors: {
     brand: ['#FFC43B', '#058A83', '#D54A2E'],
     background: ['#F4EBDE'],
-    nautral: ['#7E7E7E'],
+    neutral: ['#7E7E7E'],
   },
   fontFamily: `${courierPrime.style.fontFamily}, sans-serif`,
   headings: {
