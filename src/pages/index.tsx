@@ -1,15 +1,13 @@
 import Layout from '@/components/Layout';
 import { Text, Flex, Box, SimpleGrid, Button } from '@mantine/core';
-import { useMemo } from 'react';
 import Image from 'next/image';
-import { config, helpers } from '@ckb-lumos/lumos';
 import SporeCard from '@/components/SporeCard';
 import useWalletConnect from '@/hooks/useWalletConnect';
 import useAddSporeModal from '@/hooks/modal/useAddSporeModal';
 import useClusterByIdQuery from '@/hooks/query/useClusterByIdQuery';
 import useSporeByClusterQuery from '@/hooks/query/useSporeByClusterQuery';
-import { Cluster, getCluster } from '@/utils/cluster';
-import { Spore, getSpores } from '@/utils/spore';
+import { Cluster } from '@/utils/cluster';
+import { Spore } from '@/utils/spore';
 import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 
@@ -19,14 +17,6 @@ export type HomePageProps = {
 };
 
 const id = process.env.NEXT_PUBLIC_CLUSTER_ID!;
-
-export const getInitialProps = async () => {
-  const cluster = await getCluster(id);
-  const spores = await getSpores(id);
-  return {
-    props: { cluster, spores },
-  };
-};
 
 export default function HomePage(props: HomePageProps) {
   const { connected } = useWalletConnect();

@@ -20,11 +20,20 @@ import useAddSporeMutation from '../mutation/useAddSporeMutation';
 import ShadowTitle from '@/components/ShadowTitle';
 import TxProgress, { TxStatus } from '@/components/TxProgress';
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles((theme) => ({
   dropzone: {
     width: '928px',
     height: '423px',
   },
+  preview: {
+    width: '928px',
+    height: '423px',
+    borderWidth: '3px',
+    borderStyle: 'solid',
+    borderColor: theme.colors.neutral[0],
+    paddingTop: theme.spacing.md,
+    paddingBottom: theme.spacing.md,
+  }
 }));
 
 export default function useAddSporeModal(clusterId?: string) {
@@ -117,7 +126,7 @@ export default function useAddSporeModal(clusterId?: string) {
               </Flex>
             )}
             {dataUrl ? (
-              <Box className={classes.dropzone}>
+              <Box className={classes.preview}>
                 {content && txStatus !== 'init' ? (
                   <TxProgress status={txStatus} />
                 ) : (
@@ -212,6 +221,7 @@ export default function useAddSporeModal(clusterId?: string) {
     opened,
     close,
     classes.dropzone,
+    classes.preview,
     sizeLimit,
     txStatus,
   ]);

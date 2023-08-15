@@ -1,7 +1,7 @@
 import Layout from '@/components/Layout';
 import ShadowTitle from '@/components/ShadowTitle';
 import useSporeByIdQuery from '@/hooks/query/useSporeByIdQuery';
-import { Cluster, getCluster } from '@/utils/cluster';
+import { Cluster } from '@/utils/cluster';
 import { Spore, getSpore, getSpores } from '@/utils/spore';
 import { BI, config, helpers } from '@ckb-lumos/lumos';
 import { Flex, Text, createStyles, Image } from '@mantine/core';
@@ -41,12 +41,6 @@ export const getStaticProps: GetStaticProps<
 > = async (context) => {
   const { id } = context.params!;
   const spore = await getSpore(id as string);
-  const cluster = await getCluster(spore?.clusterId as string);
-  if (cluster) {
-    return {
-      props: { cluster, spore },
-    };
-  }
   return {
     props: { spore },
   };

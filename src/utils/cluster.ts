@@ -49,7 +49,10 @@ export async function getClusters(options?: QueryOptions) {
   return clusters;
 }
 
-export async function getCluster(id: string, options?: QueryOptions) {
+export async function getCluster(id: string | undefined, options?: QueryOptions) {
+  if (!id) {
+    return undefined;
+  }
   const config = predefinedSporeConfigs[options?.network ?? 'Aggron4'];
   const indexer = new Indexer(config.ckbIndexerUrl);
   const collector = indexer.collector({
@@ -60,4 +63,6 @@ export async function getCluster(id: string, options?: QueryOptions) {
     const cluster = getClusterFromCell(cell);
     return cluster;
   }
+
+  return undefined;
 }
