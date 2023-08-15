@@ -1,5 +1,4 @@
 import { Text, Box, Flex, Progress, createStyles } from '@mantine/core';
-import { randomInt } from 'crypto';
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 

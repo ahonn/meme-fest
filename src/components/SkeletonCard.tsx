@@ -1,8 +1,6 @@
 import {
-  Text,
   Card,
   Flex,
-  Group,
   createStyles,
   AspectRatio,
 } from '@mantine/core';

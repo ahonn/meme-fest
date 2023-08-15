@@ -1,7 +1,6 @@
 import { Text, Button, Flex, Box, createStyles } from '@mantine/core';
-// import useCKBullSigner from '@/hooks/useCKBullSigner';
 import useWalletConnect from '@/hooks/useWalletConnect';
-import { useDeferredValue, useMemo } from 'react';
+import { useMemo } from 'react';
 import useMetaMask from '@/hooks/useMetaMask';
 import { useRouter } from 'next/router';
 import { BI } from '@ckb-lumos/lumos';

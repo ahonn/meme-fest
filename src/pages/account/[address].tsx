@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import { Box, Text, createStyles, Flex, SimpleGrid } from '@mantine/core';
 import { useMemo } from 'react';
 import SporeCard from '@/components/SporeCard';
-import { Cell, Script, helpers } from '@ckb-lumos/lumos';
+import { Script, helpers } from '@ckb-lumos/lumos';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import useSporesQuery from '@/hooks/query/useSporesQuery';
