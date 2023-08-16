@@ -12,15 +12,16 @@ export interface MutationHooks {
   onError?: (e: Error) => void;
 }
 
-export default function useAddSporeMutation(
-  hooks?: MutationHooks,
-) {
+export default function useAddSporeMutation(hooks?: MutationHooks) {
   const queryClient = useQueryClient();
   const { address, signTransaction } = useWalletConnect();
 
   const addSpore = useCallback(
     async (...args: Parameters<typeof createSpore>) => {
-      let { txSkeleton } = await createSpore(...args);
+      let { txSkeleton, cluster: sporeCluster } = await createSpore(...args);
+      txSkeleton = txSkeleton.update('witnesses', (witnesses) => {
+        return witnesses.set(sporeCluster!.inputIndex, '0x');
+      });
       const signedTx = await signTransaction(txSkeleton);
       hooks?.onSigned?.(signedTx);
       const hash = await sendTransaction(signedTx);
