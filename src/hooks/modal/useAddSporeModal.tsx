@@ -1,5 +1,5 @@
 import { predefinedSporeConfigs } from '@spore-sdk/core';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDisclosure, useId } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import {
@@ -18,6 +18,7 @@ import useWalletConnect from '../useWalletConnect';
 import useAddSporeMutation from '../mutation/useAddSporeMutation';
 import ShadowTitle from '@/components/ShadowTitle';
 import TxProgress, { TxStatus } from '@/components/TxProgress';
+import { event } from 'nextjs-google-analytics';
 
 const useStyles = createStyles((theme) => ({
   dropzone: {
@@ -67,6 +68,9 @@ export default function useAddSporeModal(clusterId?: string) {
     if (!content || !address || !lock) {
       return;
     }
+    event('mint_spore', {
+      message: address,
+    });
 
     try {
       const contentBuffer = await content.arrayBuffer();
@@ -80,16 +84,15 @@ export default function useAddSporeModal(clusterId?: string) {
         toLock: lock,
         config: predefinedSporeConfigs.Aggron4,
       });
-      notifications.show({
-        color: 'green',
-        title: 'Congratulations!',
-        message: 'Your spore has been successfully minted.',
-      });
+      event('mint_success');
     } catch (e) {
       notifications.show({
         color: 'red',
         title: 'Error!',
         message: (e as Error).message,
+      });
+      event('mint_error', {
+        label: (e as Error).message,
       });
     }
   }, [content, address, lock, addSporeMutation, clusterId]);
