@@ -86,6 +86,7 @@ export default function useAddSporeModal(clusterId?: string) {
       });
       event('mint_success');
     } catch (e) {
+      setTxStatus('error');
       notifications.show({
         color: 'red',
         title: 'Error!',
