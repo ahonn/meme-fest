@@ -42,7 +42,11 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
           <Header height="160px" className={classes.header}>
             <Box className={classes.banner}>
               <Flex align="center" h="100%" w="200%">
-                <Link style={{ textDecoration: 'none' }} href="/">
+                <Link
+                  style={{ textDecoration: 'none' }}
+                  target="_blank"
+                  href="https://discord.gg/ZmbbT529fQ"
+                >
                   <Marquee baseVelocity={3}>
                     <Text
                       component="span"
