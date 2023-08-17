@@ -76,7 +76,7 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
           </Header>
         }
       >
-        <Container size="xl" pt="60px">
+        <Container size="xl" pt="60px" pb="40px">
           {children}
         </Container>
       </AppShell>
