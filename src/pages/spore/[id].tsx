@@ -133,15 +133,16 @@ export default function SporePage(props: SporePageProps) {
             <Text className={classes.owner} mr="5px">
               Owned By:
             </Text>
-            <Text
-              mr="5px"
-              color="brand.1"
-              sx={{ cursor: 'pointer' }}
-              className={classes.owner}
-              onClick={() => router.push(`/${owner}`)}
-            >
-              {owner.slice(0, 10)}...{owner.slice(-10)}
-            </Text>
+            <Link href={`/${owner}`} style={{ textDecoration: 'none' }}>
+              <Text
+                mr="5px"
+                color="brand.1"
+                sx={{ cursor: 'pointer' }}
+                className={classes.owner}
+              >
+                {owner.slice(0, 10)}...{owner.slice(-10)}
+              </Text>
+            </Link>
             <Tooltip label={clipoard.copied ? 'Copied!' : 'Copy'}>
               <IconCopy
                 size={18}

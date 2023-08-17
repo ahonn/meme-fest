@@ -58,6 +58,7 @@ const components: MantineThemeOverride['components'] = {
           lineHeight: '20px',
           fontWeight: 'bold',
           overflow: 'visible',
+          fontFamily: `${roboto.style.fontFamily}, sans-serif`,
           textShadow: getStrokeShadow(2, theme.black),
         },
       },

@@ -31,6 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
               },
               '.mantine-Modal-content': {
                 overflowY: 'visible',
+                maxHeight: 'none',
               },
             },
           }}

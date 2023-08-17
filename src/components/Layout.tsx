@@ -52,7 +52,6 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
                       component="span"
                       color="white"
                       size="24px"
-                      weight="bold"
                       mr="md"
                       inline
                     >

@@ -20,6 +20,7 @@ const useStyles = createStyles((theme) => ({
       top: '34px',
       right: '-10px',
       color: theme.black,
+      fontWeight: 'normal',
       fontSize: '14px',
     },
   },
@@ -107,17 +108,17 @@ export default function TxProgress(props: TxProgressProps) {
         />
       </Box>
       {status === 'pending' && (
-        <Text size="16px" weight="bold">
+        <Text size="16px">
           Transaction in progress, please do not close
         </Text>
       )}
       {status === 'success' && (
-        <Text size="16px" weight="bold">
-          congrate!!!
+        <Text size="16px">
+          Congrate!!!
         </Text>
       )}
       {status === 'error' && (
-        <Text size="16px" weight="bold">
+        <Text size="16px">
           Sorry, please try again
         </Text>
       )}
