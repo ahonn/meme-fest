@@ -14,8 +14,8 @@ import {
 import { notifications } from '@mantine/notifications';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import Image from 'next/image';
-import useWalletConnect from '../useWalletConnect';
-import useAddSporeMutation from '../mutation/useAddSporeMutation';
+import useWalletConnect from './useWalletConnect';
+import useAddSporeMutation from './useAddSporeMutation';
 import ShadowTitle from '@/components/ShadowTitle';
 import TxProgress, { TxStatus } from '@/components/TxProgress';
 import { event } from 'nextjs-google-analytics';

@@ -6,7 +6,7 @@ import useMetaMask from './useMetaMask';
 
 const defaultValue = {
   address: '',
-  connectorType: 'metamask' as 'metamask' | 'ckbull',
+  connectorType: 'metamask',
 };
 
 interface Connector {

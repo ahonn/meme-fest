@@ -3,7 +3,7 @@ import Layout from '@/components/Layout';
 import ShadowTitle from '@/components/ShadowTitle';
 import SporeService, { Spore } from '@/spore';
 import { BI, config, helpers } from '@ckb-lumos/lumos';
-import { Flex, Text, createStyles, Image, Box, Tooltip } from '@mantine/core';
+import { Flex, Text, createStyles, Image, Tooltip } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { IconCopy } from '@tabler/icons-react';
 import { GetStaticPaths, GetStaticProps } from 'next';
@@ -138,7 +138,7 @@ export default function SporePage(props: SporePageProps) {
               color="brand.1"
               sx={{ cursor: 'pointer' }}
               className={classes.owner}
-              onClick={() => router.push(`/account/${owner}`)}
+              onClick={() => router.push(`/${owner}`)}
             >
               {owner.slice(0, 10)}...{owner.slice(-10)}
             </Text>

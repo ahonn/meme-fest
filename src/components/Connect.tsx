@@ -1,10 +1,9 @@
 import { Text, Button, Flex, Box, createStyles } from '@mantine/core';
 import useWalletConnect from '@/hooks/useWalletConnect';
 import { useMemo } from 'react';
-import useMetaMask from '@/hooks/useMetaMask';
 import { useRouter } from 'next/router';
 import { BI } from '@ckb-lumos/lumos';
-import useAccountQuery from '@/hooks/query/useAccountQuery';
+import { useQuery } from 'react-query';
 
 const useStyles = createStyles(() => ({
   text: {
@@ -24,13 +23,23 @@ const useStyles = createStyles(() => ({
 
 export default function Connect() {
   const { classes } = useStyles();
-  const { address, connected } = useWalletConnect();
+  const { address, connected, connect } = useWalletConnect();
   const router = useRouter();
 
-  // const ckbullSigner = useCKBullSigner();
-  const metaMask = useMetaMask();
-
-  const accountQuery = useAccountQuery();
+  const accountQuery = useQuery(
+    ['account', address],
+    async () => {
+      const response = await fetch(`/api/account/${address}`);
+      const data = await response.json();
+      return data;
+    },
+    {
+      initialData: {
+        capacities: BI.from(0).toHexString(),
+      },
+      enabled: !!address,
+    },
+  );
   const balance = useMemo(() => {
     const capacities = BI.from(accountQuery.data?.capacities ?? 0).toNumber();
     return Math.floor(capacities / 10 ** 8);
@@ -58,13 +67,13 @@ export default function Connect() {
             py="8px"
             className={classes.rightRaduis}
             sx={{ cursor: 'pointer' }}
-            onClick={() => router.push(`/account/my`)}
+            onClick={() => router.push(`/my`)}
           >
             <Text className={classes.text}>{displayAddress}</Text>
           </Box>
         </Flex>
       ) : (
-        <Button onClick={metaMask.connect}>Connect Wallet</Button>
+        <Button onClick={connect}>Connect Wallet</Button>
       )}
     </>
   );

@@ -12,22 +12,12 @@ import { useMemo } from 'react';
 import Image from 'next/image';
 import SporeCard from '@/components/SporeCard';
 import useWalletConnect from '@/hooks/useWalletConnect';
-import useAddSporeModal from '@/hooks/modal/useAddSporeModal';
+import useAddSporeModal from '@/hooks/useAddSporeModal';
 import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import { Spore } from '@/spore';
 import { useQuery } from 'react-query';
-import { Cluster } from '@/cluster';
 import { useClipboard } from '@mantine/hooks';
-
-export type AccountPageProps = {
-  clusters: Cluster[];
-  spores: Spore[];
-};
-
-export type AccountPageParams = {
-  address: string;
-};
 
 const useStyles = createStyles((theme) => ({
   count: {
@@ -41,7 +31,7 @@ const useStyles = createStyles((theme) => ({
 
 const clusterId = process.env.NEXT_PUBLIC_CLUSTER_ID!;
 
-export default function AccountPage(props: AccountPageProps) {
+export default function AccountPage() {
   const { classes } = useStyles();
   const clipboard = useClipboard();
   const { address } = useWalletConnect();
@@ -57,7 +47,6 @@ export default function AccountPage(props: AccountPageProps) {
       return data as Spore[];
     },
     {
-      initialData: props.spores,
       refetchOnWindowFocus: true,
     },
   );

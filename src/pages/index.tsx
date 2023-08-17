@@ -3,7 +3,7 @@ import { Text, Flex, Box, SimpleGrid, Button } from '@mantine/core';
 import Image from 'next/image';
 import SporeCard from '@/components/SporeCard';
 import useWalletConnect from '@/hooks/useWalletConnect';
-import useAddSporeModal from '@/hooks/modal/useAddSporeModal';
+import useAddSporeModal from '@/hooks/useAddSporeModal';
 import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import Connect from '@/components/Connect';
@@ -11,38 +11,19 @@ import { Spore } from '@/spore';
 import { useQuery } from 'react-query';
 import { Cluster } from '@/cluster';
 
-export type HomePageProps = {
-  cluster: Cluster | undefined;
-  spores: Spore[];
-};
-
 const id = process.env.NEXT_PUBLIC_CLUSTER_ID!;
 
-// export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-//   const [cluster, spores] = await Promise.all([
-//     ClusterService.shared.get(id),
-//     SporeService.shared.list(id),
-//   ]);
-//   return {
-//     props: { cluster, spores },
-//   };
-// };
-
-export default function HomePage(props: HomePageProps) {
+export default function HomePage() {
   const { connected } = useWalletConnect();
   const addSporeModal = useAddSporeModal(id as string);
 
-  const { data: cluster } = useQuery(
-    ['cluster', id],
-    async () => {
-      const response = await fetch(
-        `/api/cluster/${encodeURIComponent(id as string)}`,
-      );
-      const data = await response.json();
-      return data as Cluster;
-    },
-    { initialData: props.cluster },
-  );
+  const { data: cluster } = useQuery(['cluster', id], async () => {
+    const response = await fetch(
+      `/api/cluster/${encodeURIComponent(id as string)}`,
+    );
+    const data = await response.json();
+    return data as Cluster;
+  });
 
   const { data: spores = [], isLoading } = useQuery(
     ['spores', id],
@@ -53,7 +34,7 @@ export default function HomePage(props: HomePageProps) {
       const data = await response.json();
       return data as Spore[];
     },
-    { initialData: props.spores, refetchOnWindowFocus: true },
+    { refetchOnWindowFocus: true },
   );
 
   if (!cluster) {

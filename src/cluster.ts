@@ -1,4 +1,4 @@
-import { Cell, Indexer, Script } from '@ckb-lumos/lumos';
+import { Cell, Indexer } from '@ckb-lumos/lumos';
 import {
   ClusterData,
   SporeConfig,
