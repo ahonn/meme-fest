@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps<
 
 const useStyles = createStyles(() => ({
   image: {
-    maxWidth: '660px',
+    maxWidth: '330px',
   },
   id: {
     fontSize: '20px',

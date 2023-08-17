@@ -1,5 +1,12 @@
 import Layout from '@/components/Layout';
-import { Box, Text, createStyles, Flex, SimpleGrid } from '@mantine/core';
+import {
+  Box,
+  Text,
+  createStyles,
+  Flex,
+  SimpleGrid,
+  Tooltip,
+} from '@mantine/core';
 import { useMemo } from 'react';
 import SporeCard from '@/components/SporeCard';
 import { config, helpers } from '@ckb-lumos/lumos';
@@ -9,6 +16,7 @@ import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import SporeService, { Spore } from '@/spore';
 import { useQuery } from 'react-query';
+import { useClipboard } from '@mantine/hooks';
 
 export type AccountPageProps = {
   spores: Spore[];
@@ -82,6 +90,7 @@ export default function AccountPage(props: AccountPageProps) {
   const { classes } = useStyles();
   const router = useRouter();
   const { address } = router.query;
+  const clipboard = useClipboard();
   const { data: spores = [], isLoading } = useQuery(
     ['spores', address],
     async () => {
@@ -103,7 +112,15 @@ export default function AccountPage(props: AccountPageProps) {
   return (
     <Layout>
       <Flex direction="column" justify="center" align="center">
-        <ShadowTitle>{displayAddress}</ShadowTitle>
+        <Tooltip
+          label={clipboard.copied ? 'Copied!' : 'Copy'}
+          position="bottom"
+          withArrow
+        >
+          <Box sx={{ cursor: 'pointer' }} onClick={() => clipboard.copy(address)}>
+            <ShadowTitle>{displayAddress}</ShadowTitle>
+          </Box>
+        </Tooltip>
       </Flex>
       {isLoading ? (
         <Box mt="114px">
