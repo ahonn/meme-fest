@@ -11,6 +11,7 @@ import Logo from './Logo';
 import Connect from './Connect';
 import Marquee from './Marquee';
 import Link from 'next/link';
+import { useMediaQuery } from '@mantine/hooks';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -36,6 +37,7 @@ const useStyles = createStyles((theme) => ({
 
 export default function Layout({ children }: React.PropsWithChildren<{}>) {
   const { classes } = useStyles();
+  const largeScreen = useMediaQuery('(min-width: 48em)');
 
   return (
     <>
@@ -75,7 +77,8 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
                   direction={{ base: 'column', sm: 'row' }}
                   justify="space-between"
                   align="center"
-                  py="27px"
+                  px={largeScreen ? '40px' : '0px'}
+                  py={largeScreen ? '27px' : '20px'}
                 >
                   <Logo />
                   <Connect />

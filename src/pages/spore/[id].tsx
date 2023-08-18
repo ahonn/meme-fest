@@ -4,12 +4,14 @@ import ShadowTitle from '@/components/ShadowTitle';
 import SporeService, { Spore } from '@/spore';
 import { BI, config, helpers } from '@ckb-lumos/lumos';
 import { Flex, Text, createStyles, Image, Tooltip } from '@mantine/core';
-import { useClipboard } from '@mantine/hooks';
+import { useClipboard, useDisclosure } from '@mantine/hooks';
 import { IconCopy } from '@tabler/icons-react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
 
 export type SporePageProps = {
   cluster?: Cluster;
@@ -54,6 +56,7 @@ export const getStaticProps: GetStaticProps<
 const useStyles = createStyles(() => ({
   image: {
     maxWidth: '330px',
+    marginTop: '20px',
   },
   id: {
     fontSize: '20px',
@@ -76,6 +79,7 @@ export default function SporePage(props: SporePageProps) {
   const { classes } = useStyles();
   const router = useRouter();
   const { id } = router.query;
+  const [opened, handlers] = useDisclosure(false);
   const clipoard = useClipboard();
   const { data: spore } = useQuery(
     ['spore', id],
@@ -106,6 +110,12 @@ export default function SporePage(props: SporePageProps) {
           src={`/api/media/${spore.id}`}
           alt={spore.id}
           className={classes.image}
+          onClick={() => handlers.open()}
+        />
+        <Lightbox
+          open={opened}
+          close={() => handlers.close()}
+          slides={[{ src: `/api/media/${spore.id}` }]}
         />
         <Flex mt="30px" direction="column" justify="center" align="center">
           <Flex mb="16px" align="center">
