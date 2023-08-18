@@ -56,7 +56,7 @@ export default function App({ Component, pageProps }: AppProps) {
                       'From Tiny Cells To Epic Memes - The NFT Spore Voyage',
                     images: [
                       {
-                        url: 'https://meme-fest.vercel.app/image/ogp.png',
+                        url: 'https://meme-fest.vercel.app/image/og-image.png',
                         width: 800,
                         height: 420,
                         alt: 'Meme Fest',
