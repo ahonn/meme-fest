@@ -65,7 +65,15 @@ export default function HomePage() {
 
       <Box mt={20}>
         {isLoading || spores.length > 0 ? (
-          <SimpleGrid cols={4} spacing="xl">
+          <SimpleGrid
+            cols={4}
+            spacing="xl"
+            breakpoints={[
+              { maxWidth: '80rem', cols: 3 },
+              { maxWidth: '60rem', cols: 2 },
+              { maxWidth: '36rem', cols: 1 },
+            ]}
+          >
             {isLoading
               ? Array(4)
                   .fill(0)

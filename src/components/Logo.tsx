@@ -14,6 +14,10 @@ const useStyles = createStyles((theme) => ({
     fontFeatureSettings: "'calt' off",
     fontSize: '24px',
     lineHeight: '32px',
+
+    '@media (max-width: 48em)': {
+      marginBottom: '10px',
+    },
   },
 }));
 

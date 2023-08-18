@@ -27,6 +27,10 @@ const useStyles = createStyles((theme) => ({
   container: {
     height: '90px',
     backgroundColor: theme.colors.brand[1],
+
+    '@media (max-width: 48em)': {
+      height: '120px',
+    },
   },
 }));
 
@@ -67,7 +71,12 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
             </Box>
             <Box className={classes.container}>
               <Container size="xl" h="100%">
-                <Flex h="100%" justify="space-between" align="center" px="40px">
+                <Flex
+                  direction={{ base: 'column', sm: 'row' }}
+                  justify="space-between"
+                  align="center"
+                  py="27px"
+                >
                   <Logo />
                   <Connect />
                 </Flex>
