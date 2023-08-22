@@ -3,7 +3,14 @@ import Layout from '@/components/Layout';
 import ShadowTitle from '@/components/ShadowTitle';
 import SporeService, { Spore } from '@/spore';
 import { BI, config, helpers } from '@ckb-lumos/lumos';
-import { Flex, Text, createStyles, Image, Tooltip } from '@mantine/core';
+import {
+  Flex,
+  Text,
+  createStyles,
+  Image,
+  Tooltip,
+  MediaQuery,
+} from '@mantine/core';
 import { useClipboard, useDisclosure } from '@mantine/hooks';
 import { IconCopy } from '@tabler/icons-react';
 import { GetStaticPaths, GetStaticProps } from 'next';
@@ -119,9 +126,11 @@ export default function SporePage(props: SporePageProps) {
         />
         <Flex mt="30px" direction="column" justify="center" align="center">
           <Flex mb="16px" align="center">
-            <Text className={classes.id} mr="5px">
-              Spore Id:
-            </Text>
+            <MediaQuery query="(max-width: 36rem)" styles={{ display: 'none' }}>
+              <Text className={classes.id} mr="5px">
+                Spore Id:
+              </Text>
+            </MediaQuery>
             <Link
               href={`https://pudge.explorer.nervos.org/transaction/${spore.cell.outPoint?.txHash}`}
               target="_blank"
@@ -140,9 +149,11 @@ export default function SporePage(props: SporePageProps) {
             </Tooltip>
           </Flex>
           <Flex mb="16px" align="center">
-            <Text className={classes.owner} mr="5px">
-              Owned By:
-            </Text>
+            <MediaQuery query="(max-width: 36rem)" styles={{ display: 'none' }}>
+              <Text className={classes.owner} mr="5px">
+                Owned By:
+              </Text>
+            </MediaQuery>
             <Link href={`/${owner}`} style={{ textDecoration: 'none' }}>
               <Text
                 mr="5px"

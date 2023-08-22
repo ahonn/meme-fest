@@ -1,5 +1,5 @@
 import Layout from '@/components/Layout';
-import { Text, Flex, Box, SimpleGrid, Button } from '@mantine/core';
+import { Text, Flex, Box, SimpleGrid, Button, MediaQuery } from '@mantine/core';
 import Image from 'next/image';
 import SporeCard from '@/components/SporeCard';
 import useWalletConnect from '@/hooks/useWalletConnect';
@@ -52,15 +52,17 @@ export default function HomePage() {
             <Text color="brand.2">Connect your wallet to start minting!!</Text>
           )}
         </Flex>
-        <Box mt="50px" mb="48px">
-          <Image
-            src="/meme.svg"
-            width="1304"
-            height="135"
-            alt="meme gratiffi"
-            layout="responsive"
-          />
-        </Box>
+        <MediaQuery query="(max-width: 36rem)" styles={{ display: 'none' }}>
+          <Box mt="50px" mb="48px">
+            <Image
+              src="/meme.svg"
+              width="1304"
+              height="135"
+              alt="meme gratiffi"
+              layout="responsive"
+            />
+          </Box>
+        </MediaQuery>
       </Flex>
 
       <Box mt={20}>
