@@ -6,9 +6,12 @@ import {
   useAccount as useWagmiAccount,
   useConnect as useWagmiConnect,
 } from 'wagmi';
+import { Text } from '@mantine/core';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { signMessage } from 'wagmi/actions';
 import { WalletContext } from './useWalletConnect';
+import { notifications } from '@mantine/notifications';
+import Link from 'next/link';
 
 function toCKBAddress(address: `0x${string}`) {
   config.initializeConfig(config.predefined.AGGRON4);
@@ -19,9 +22,28 @@ function toCKBAddress(address: `0x${string}`) {
 }
 
 export default function useMetaMask() {
-  const { address, connected, connectorType, update } = useContext(WalletContext);
+  const { address, connected, connectorType, update } =
+    useContext(WalletContext);
   const { connect: connectMetaMask } = useWagmiConnect({
     connector: new MetaMaskConnector(),
+    onError: (err) => {
+      if (err.name === 'ConnectorNotFoundError') {
+        update({ address: '', connectorType: 'metamask ' });
+        notifications.show({
+          color: 'red',
+          title: 'MetaMask not found',
+          message: (
+            <Text>
+              Please download and install MetaMask, and use it to connect your
+              wallet.
+              <Link href="https://metamask.io/download">
+                Click here to download.
+              </Link>
+            </Text>
+          ),
+        });
+      }
+    },
   });
   const { address: ethAddress, isConnected } = useWagmiAccount({
     onConnect: (opts) => {

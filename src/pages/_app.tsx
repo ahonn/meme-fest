@@ -40,7 +40,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Hydrate state={pageProps.dehydratedState}>
             <WalletProvider>
               <WagmiConfig config={config}>
-                <Notifications />
+                <Notifications position="top-right" />
                 <GoogleAnalytics trackPageViews />
                 <DefaultSeo
                   title="Meme Fest"
