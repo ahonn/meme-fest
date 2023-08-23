@@ -91,12 +91,7 @@ export default function HomePage() {
             direction="column"
             justify="center"
             align="center"
-            mt="-30px"
-            sx={{
-              borderTopWidth: '1px',
-              borderTopStyle: 'solid',
-              borderTopColor: 'black',
-            }}
+            mt="-20px"
           >
             {connected ? (
               <Box mt="100px">
