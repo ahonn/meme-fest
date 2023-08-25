@@ -44,6 +44,7 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
       <AppShell
         p="md"
         bg="background.0"
+        fixed
         header={
           <Header height="160px" className={classes.header}>
             <Box className={classes.banner}>
