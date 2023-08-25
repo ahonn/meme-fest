@@ -47,7 +47,7 @@ export default function HomePage() {
         <Flex direction="column" justify="center" align="center">
           <ShadowTitle>{cluster.name}</ShadowTitle>
           {connected ? (
-            <Button onClick={addSporeModal.open}>Mint</Button>
+            <Button mb="md" onClick={addSporeModal.open}>Mint</Button>
           ) : (
             <Text color="brand.2">Connect your wallet to start minting!!</Text>
           )}

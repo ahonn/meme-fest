@@ -15,6 +15,7 @@ import { useMediaQuery } from '@mantine/hooks';
 
 const useStyles = createStyles((theme) => ({
   header: {
+    position: 'static',
     borderBottom: 'none',
     boxShadow: Array(9)
       .fill(0)
@@ -42,54 +43,52 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
   return (
     <>
       <AppShell
-        p="md"
+        p="0"
         bg="background.0"
-        fixed
-        header={
-          <Header height="160px" className={classes.header}>
-            <Box className={classes.banner}>
-              <Flex align="center" h="100%" w="200%">
-                <Link
-                  style={{ textDecoration: 'none' }}
-                  target="_blank"
-                  href="https://discord.gg/ZmbbT529fQ"
-                >
-                  <Marquee baseVelocity={3}>
-                    <Text
-                      component="span"
-                      color="white"
-                      size="24px"
-                      mr="md"
-                      inline
-                    >
-                      Click here to get more information from{' '}
-                      <Text component="span" color="brand.0" inline>
-                        HaCKBee
-                      </Text>
-                      .
-                    </Text>
-                  </Marquee>
-                </Link>
-              </Flex>
-            </Box>
-            <Box className={classes.container}>
-              <Container size="xl" h="100%">
-                <Flex
-                  direction={{ base: 'column', sm: 'row' }}
-                  justify="space-between"
-                  align="center"
-                  px={largeScreen ? '40px' : '0px'}
-                  py={largeScreen ? '27px' : '20px'}
-                >
-                  <Logo />
-                  <Connect />
-                </Flex>
-              </Container>
-            </Box>
-          </Header>
-        }
+        styles={{ main: { padding: '0px', overflow: 'hidden' } }}
       >
-        <Container size="xl" pt="60px" pb="40px">
+        <Header height="160px" className={classes.header}>
+          <Box className={classes.banner}>
+            <Flex align="center" h="100%" w="200%">
+              <Link
+                style={{ textDecoration: 'none' }}
+                target="_blank"
+                href="https://discord.gg/ZmbbT529fQ"
+              >
+                <Marquee baseVelocity={3}>
+                  <Text
+                    component="span"
+                    color="white"
+                    size="24px"
+                    mr="md"
+                    inline
+                  >
+                    Click here to get more information from{' '}
+                    <Text component="span" color="brand.0" inline>
+                      HaCKBee
+                    </Text>
+                    .
+                  </Text>
+                </Marquee>
+              </Link>
+            </Flex>
+          </Box>
+          <Box className={classes.container}>
+            <Container size="xl" h="100%">
+              <Flex
+                direction={{ base: 'column', sm: 'row' }}
+                justify="space-between"
+                align="center"
+                px={largeScreen ? '40px' : '0px'}
+                py={largeScreen ? '27px' : '20px'}
+              >
+                <Logo />
+                <Connect />
+              </Flex>
+            </Container>
+          </Box>
+        </Header>
+        <Container size="xl" py="60px">
           {children}
         </Container>
       </AppShell>
