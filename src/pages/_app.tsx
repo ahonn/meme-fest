@@ -45,7 +45,7 @@ function UIProvider({ children }: React.PropsWithChildren<{}>) {
           },
         }}
       >
-        <Notifications />
+        <Notifications position="top-right" />
         {children}
       </ModalsProvider>
     </MantineProvider>
@@ -62,7 +62,6 @@ function App({ Component, pageProps }: AppProps) {
     <ConnectProvider value={config}>
       <StateProvider pageProps={pageProps}>
         <UIProvider>
-          <Notifications position="top-right" />
           <GoogleAnalytics trackPageViews />
           <DefaultSeo
             title="Meme Fest"
