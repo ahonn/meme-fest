@@ -1,9 +1,11 @@
 import { Text, Button, Flex, Box, createStyles } from '@mantine/core';
-import useWalletConnect from '@/hooks/useWalletConnect';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { BI } from '@ckb-lumos/lumos';
 import { useQuery } from 'react-query';
+import { useConnect } from '@/hooks/useConnect';
+import Link from 'next/link';
+import { notifications } from '@mantine/notifications';
 
 const useStyles = createStyles(() => ({
   text: {
@@ -23,7 +25,7 @@ const useStyles = createStyles(() => ({
 
 export default function Connect() {
   const { classes } = useStyles();
-  const { address, connected, connect } = useWalletConnect();
+  const { address, connected, connect, disconnect } = useConnect();
   const router = useRouter();
 
   const accountQuery = useQuery(
@@ -49,6 +51,29 @@ export default function Connect() {
     return connected ? `${address?.slice(0, 5)}...${address?.slice(-5)}` : '';
   }, [address, connected]);
 
+  const handleConnect = useCallback(async () => {
+    try {
+      await connect();
+    } catch (err) {
+      if ((err as Error).name === 'ConnectorNotFoundError') {
+        await disconnect();
+        notifications.show({
+          color: 'red',
+          title: 'MetaMask not found',
+          message: (
+            <Text>
+              Please download and install MetaMask, and use it to connect your
+              wallet.
+              <Link href="https://metamask.io/download">
+                Click here to download.
+              </Link>
+            </Text>
+          ),
+        });
+      }
+    }
+  }, [connect, disconnect]);
+
   return (
     <>
       {connected ? (
@@ -73,7 +98,7 @@ export default function Connect() {
           </Box>
         </Flex>
       ) : (
-        <Button onClick={connect}>Connect Wallet</Button>
+        <Button onClick={handleConnect}>Connect Wallet</Button>
       )}
     </>
   );

@@ -11,13 +11,13 @@ import {
 import { useMemo } from 'react';
 import Image from 'next/image';
 import SporeCard from '@/components/SporeCard';
-import useWalletConnect from '@/hooks/useWalletConnect';
 import useAddSporeModal from '@/hooks/useAddSporeModal';
 import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import { Spore } from '@/spore';
 import { useQuery } from 'react-query';
 import { useClipboard } from '@mantine/hooks';
+import { useConnect } from '@/hooks/useConnect';
 
 const useStyles = createStyles((theme) => ({
   count: {
@@ -34,7 +34,7 @@ const clusterId = process.env.NEXT_PUBLIC_CLUSTER_ID!;
 export default function AccountPage() {
   const { classes } = useStyles();
   const clipboard = useClipboard();
-  const { address } = useWalletConnect();
+  const { address } = useConnect();
   const addSporeModal = useAddSporeModal(clusterId);
 
   const { data: spores = [], isLoading } = useQuery(

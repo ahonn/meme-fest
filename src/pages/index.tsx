@@ -2,7 +2,6 @@ import Layout from '@/components/Layout';
 import { Text, Flex, Box, SimpleGrid, Button, MediaQuery } from '@mantine/core';
 import Image from 'next/image';
 import SporeCard from '@/components/SporeCard';
-import useWalletConnect from '@/hooks/useWalletConnect';
 import useAddSporeModal from '@/hooks/useAddSporeModal';
 import ShadowTitle from '@/components/ShadowTitle';
 import SkeletonCard from '@/components/SkeletonCard';
@@ -10,11 +9,12 @@ import Connect from '@/components/Connect';
 import { Spore } from '@/spore';
 import { useQuery } from 'react-query';
 import { Cluster } from '@/cluster';
+import { useConnect } from '@/hooks/useConnect';
 
 const id = process.env.NEXT_PUBLIC_CLUSTER_ID!;
 
 export default function HomePage() {
-  const { connected } = useWalletConnect();
+  const { connected } = useConnect();
   const addSporeModal = useAddSporeModal(id as string);
 
   const { data: cluster } = useQuery(['cluster', id], async () => {
@@ -124,3 +124,4 @@ export default function HomePage() {
     </Layout>
   );
 }
+

@@ -14,11 +14,11 @@ import {
 import { notifications } from '@mantine/notifications';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import Image from 'next/image';
-import useWalletConnect from './useWalletConnect';
 import useAddSporeMutation from './useAddSporeMutation';
 import ShadowTitle from '@/components/ShadowTitle';
 import TxProgress, { TxStatus } from '@/components/TxProgress';
 import { event } from 'nextjs-google-analytics';
+import { useConnect } from './useConnect';
 
 const useStyles = createStyles((theme) => ({
   dropzone: {
@@ -39,7 +39,7 @@ const useStyles = createStyles((theme) => ({
 export default function useAddSporeModal(clusterId?: string) {
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
-  const { address, lock } = useWalletConnect();
+  const { address, lock } = useConnect();
   const [content, setContent] = useState<Blob | null>(null);
   const [txStatus, setTxStatus] = useState<TxStatus>('init');
   const [dataUrl, setDataUrl] = useState<string | ArrayBuffer | null>(null);
