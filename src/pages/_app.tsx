@@ -87,7 +87,7 @@ function App({ Component, pageProps }: AppProps) {
             }}
             twitter={{
               cardType: 'summary_large_image',
-              handle: '@ha_ckbee',
+              handle: '@web5hive',
             }}
           />
           <Component {...pageProps} />
