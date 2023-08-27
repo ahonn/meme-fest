@@ -1,9 +1,9 @@
 import { createSpore } from '@spore-sdk/core';
 import { useCallback } from 'react';
-import useWalletConnect from './useWalletConnect';
 import { useMutation, useQueryClient } from 'react-query';
 import { sendTransaction } from '@/utils/transaction';
 import { Transaction } from '@ckb-lumos/lumos';
+import { useConnect } from './useConnect';
 
 export interface MutationHooks {
   onSigned?: (txSkeleton: Transaction) => void;
@@ -14,7 +14,7 @@ export interface MutationHooks {
 
 export default function useAddSporeMutation(hooks?: MutationHooks) {
   const queryClient = useQueryClient();
-  const { address, signTransaction } = useWalletConnect();
+  const { address, signTransaction } = useConnect();
 
   const addSpore = useCallback(
     async (...args: Parameters<typeof createSpore>) => {
