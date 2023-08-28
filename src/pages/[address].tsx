@@ -117,14 +117,26 @@ export default function AccountPage(props: AccountPageProps) {
           position="bottom"
           withArrow
         >
-          <Box sx={{ cursor: 'pointer' }} onClick={() => clipboard.copy(address)}>
+          <Box
+            sx={{ cursor: 'pointer' }}
+            onClick={() => clipboard.copy(address)}
+          >
             <ShadowTitle>{displayAddress}</ShadowTitle>
           </Box>
         </Tooltip>
       </Flex>
       {isLoading ? (
         <Box mt="114px">
-          <SimpleGrid cols={4} spacing="xl" mt="24px">
+          <SimpleGrid
+            cols={4}
+            spacing="xl"
+            mt="24px"
+            breakpoints={[
+              { maxWidth: '80rem', cols: 3 },
+              { maxWidth: '60rem', cols: 2 },
+              { maxWidth: '36rem', cols: 1 },
+            ]}
+          >
             {Array(4)
               .fill(0)
               .map((_, index) => (
@@ -139,7 +151,16 @@ export default function AccountPage(props: AccountPageProps) {
               <Text className={classes.count}>
                 {spores.length} item{spores.length > 1 && 's'}
               </Text>
-              <SimpleGrid cols={4} spacing="xl" mt="24px">
+              <SimpleGrid
+                cols={4}
+                spacing="xl"
+                mt="24px"
+                breakpoints={[
+                  { maxWidth: '80rem', cols: 3 },
+                  { maxWidth: '60rem', cols: 2 },
+                  { maxWidth: '36rem', cols: 1 },
+                ]}
+              >
                 {spores.map((spore) => (
                   <SporeCard key={spore.id} spore={spore} />
                 ))}

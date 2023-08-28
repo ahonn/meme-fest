@@ -78,7 +78,16 @@ export default function AccountPage() {
       </Flex>
       {isLoading ? (
         <Box mt="114px">
-          <SimpleGrid cols={4} spacing="xl" mt="24px">
+          <SimpleGrid
+            cols={4}
+            spacing="xl"
+            mt="24px"
+            breakpoints={[
+              { maxWidth: '80rem', cols: 3 },
+              { maxWidth: '60rem', cols: 2 },
+              { maxWidth: '36rem', cols: 1 },
+            ]}
+          >
             {Array(4)
               .fill(0)
               .map((_, index) => (
@@ -93,7 +102,16 @@ export default function AccountPage() {
               <Text className={classes.count}>
                 {spores.length} item{spores.length > 1 && 's'}
               </Text>
-              <SimpleGrid cols={4} spacing="xl" mt="24px">
+              <SimpleGrid
+                cols={4}
+                spacing="xl"
+                mt="24px"
+                breakpoints={[
+                  { maxWidth: '80rem', cols: 3 },
+                  { maxWidth: '60rem', cols: 2 },
+                  { maxWidth: '36rem', cols: 1 },
+                ]}
+              >
                 {spores.map((spore) => (
                   <SporeCard key={spore.id} spore={spore} />
                 ))}
