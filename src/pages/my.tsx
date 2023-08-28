@@ -53,7 +53,7 @@ export default function AccountPage() {
 
   const displayAddress = useMemo(() => {
     if (!address) return '';
-    return `${address.slice(0, 20)}...${address.slice(-20)}`;
+    return `${address.slice(0, 15)}...${address.slice(-15)}`;
   }, [address]);
 
   return (
