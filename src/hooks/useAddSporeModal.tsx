@@ -10,6 +10,7 @@ import {
   Box,
   Flex,
   Image as MantineImage,
+  MediaQuery,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
@@ -139,21 +140,28 @@ export default function useAddSporeModal(clusterId?: string) {
             )}
             {dataUrl ? (
               <Box className={classes.preview}>
-                {content && txStatus !== 'init' ? (
-                  <TxProgress status={txStatus} />
-                ) : (
-                  <Box
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => openDropzoneRef.current?.()}
-                  >
-                    <MantineImage
-                      height={423}
-                      src={dataUrl.toString()}
-                      alt="preview"
-                      fit="contain"
-                    />
+                <MediaQuery
+                  query="(max-width: 36rem)"
+                  styles={{ transform: 'scale(0.8)' }}
+                >
+                  <Box>
+                    {content && txStatus !== 'init' ? (
+                      <TxProgress status={txStatus} />
+                    ) : (
+                      <Box
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => openDropzoneRef.current?.()}
+                      >
+                        <MantineImage
+                          height={423}
+                          src={dataUrl.toString()}
+                          alt="preview"
+                          fit="contain"
+                        />
+                      </Box>
+                    )}
                   </Box>
-                )}
+                </MediaQuery>
               </Box>
             ) : (
               <Dropzone
