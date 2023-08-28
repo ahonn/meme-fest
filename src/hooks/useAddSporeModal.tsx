@@ -24,6 +24,11 @@ const useStyles = createStyles((theme) => ({
   dropzone: {
     width: '928px',
     height: '423px',
+
+    '@media screen and (max-width: 35rem)': {
+      width: '100%',
+      height: 'auto',
+    },
   },
   preview: {
     width: '928px',
@@ -33,6 +38,11 @@ const useStyles = createStyles((theme) => ({
     borderColor: theme.colors.neutral[0],
     paddingTop: theme.spacing.md,
     paddingBottom: theme.spacing.md,
+
+    '@media screen and (max-width: 35rem)': {
+      width: '100%',
+      height: 'auto',
+    },
   },
 }));
 
@@ -117,7 +127,11 @@ export default function useAddSporeModal(clusterId?: string) {
         withCloseButton: false,
         closeOnClickOutside: !addSporeMutation.isLoading,
         children: (
-          <Box py="40px" px="50px">
+          <Box
+            py="40px"
+            px="50px"
+            sx={{ '@media screen and (max-width: 35rem)': { padding: '10px' } }}
+          >
             {txStatus === 'init' && (
               <Flex justify="center">
                 <ShadowTitle>Add new Meme</ShadowTitle>

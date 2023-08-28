@@ -41,6 +41,7 @@ function UIProvider({ children }: React.PropsWithChildren<{}>) {
             '.mantine-Modal-content': {
               overflowY: 'visible',
               maxHeight: 'none',
+              maxWidth: '90vw',
             },
           },
         }}
